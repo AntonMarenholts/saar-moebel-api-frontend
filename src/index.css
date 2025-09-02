@@ -3,14 +3,6 @@
 @tailwind utilities;
 
 body {
-  background-color: #0d2d2b;
-
-  background-image: url("/background-pattern.svg"),
-    linear-gradient(to bottom, #134e4a, #115e59);
-
-  background-repeat: repeat, no-repeat;
-
-  background-size: 150px, auto;
-
-  background-attachment: fixed;
+  /* Устанавливаем очень светло-серый фон и темный текст */
+  @apply bg-brand-light text-brand-dark; 
 }
