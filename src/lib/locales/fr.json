@@ -2,5 +2,22 @@
   "site_title": "Saar Möbel",
   "login": "Connexion",
   "register": "S'inscrire",
-  "home_page": "Page d'accueil"
+  "home_page": "Page d'accueil",
+  "all_rights_reserved": "Tous les droits sont réservés.",
+  "facebook": "Facebook",
+  "instagram": "Instagram",
+  "rules": "Règles",
+  "about_us_title": "À propos de notre maison de meubles",
+  "new_arrivals_title": "Nouveautés",
+  "install_app": "Installer l'application",
+  "categories": {
+    "kitchens": "Cuisines",
+    "sofas": "Meubles rembourrés",
+    "bathrooms": "Meubles de salle de bain",
+    "wardrobes": "Armoires",
+    "dining": "Meubles de salle à manger",
+    "office": "Mobilier de bureau",
+    "garden": "Mobilier de jardin",
+    "bedroom": "Meubles de chambre"
+  }
 }

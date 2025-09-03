@@ -2,5 +2,22 @@
   "site_title": "Saar Möbel",
   "login": "Login",
   "register": "Register",
-  "home_page": "Home Page"
+  "home_page": "Home Page",
+  "all_rights_reserved": "All rights reserved.",
+  "facebook": "Facebook",
+  "instagram": "Instagram",
+  "rules": "Rules",
+  "about_us_title": "About Our Furniture House",
+  "new_arrivals_title": "New Arrivals",
+  "install_app": "Install App",
+  "categories": {
+    "kitchens": "Kitchens",
+    "sofas": "Upholstered Furniture",
+    "bathrooms": "Bathroom Furniture",
+    "wardrobes": "Wardrobes",
+    "dining": "Dining Furniture",
+    "office": "Office Furniture",
+    "garden": "Garden Furniture",
+    "bedroom": "Bedroom Furniture"
+  }
 }

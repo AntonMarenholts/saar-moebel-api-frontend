@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
+import InstallPwaButton from "../InstallPwaButton";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -15,8 +16,19 @@ export default function Header() {
           {t("site_title")}
         </NavLink>
         <nav className="flex items-center gap-6">
-          <NavLink to="/login" className="text-sm font-semibold hover:text-brand-blue">{t("login")}</NavLink>
-          <NavLink to="/register" className="text-sm font-semibold hover:text-brand-blue">{t("register")}</NavLink>
+          <InstallPwaButton />
+          <NavLink
+            to="/login"
+            className="text-sm font-semibold hover:text-brand-blue"
+          >
+            {t("login")}
+          </NavLink>
+          <NavLink
+            to="/register"
+            className="text-sm font-semibold hover:text-brand-blue"
+          >
+            {t("register")}
+          </NavLink>
           <select
             onChange={(e) => changeLanguage(e.target.value)}
             value={i18n.language}

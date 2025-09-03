@@ -2,5 +2,18 @@
   "site_title": "Saar Möbel",
   "login": "Вхід",
   "register": "Реєстрація",
-  "home_page": "Головна сторінка"
+  "home_page": "Головна сторінка",
+  "about_us_title": "Про Наш Дім Меблів",
+  "new_arrivals_title": "Нові надходження",
+  "install_app": "Встановити додаток",
+  "categories": {
+    "kitchens": "Кухні",
+    "sofas": "М'які меблі",
+    "bathrooms": "Меблі для ванної",
+    "wardrobes": "Шафи",
+    "dining": "Обідні меблі",
+    "office": "Офісні меблі",
+    "garden": "Садові меблі",
+    "bedroom": "Меблі для спальні"
+  }
 }

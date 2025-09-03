@@ -2,5 +2,18 @@
   "site_title": "Saar Möbel",
   "login": "Anmelden",
   "register": "Registrieren",
-  "home_page": "Startseite"
+  "home_page": "Startseite",
+  "about_us_title": "Über Unser Möbelhaus",
+  "new_arrivals_title": "Neu eingetroffen",
+  "install_app": "App installieren",
+  "categories": {
+    "kitchens": "Küchen",
+    "sofas": "Polstermöbel",
+    "bathrooms": "Badezimmermöbel",
+    "wardrobes": "Schränke",
+    "dining": "Esszimmermöbel",
+    "office": "Büromöbel",
+    "garden": "Gartenmöbel",
+    "bedroom": "Schlafzimmermöbel"
+  }
 }

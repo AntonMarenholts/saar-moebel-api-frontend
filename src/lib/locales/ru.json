@@ -2,5 +2,22 @@
   "site_title": "Saar Möbel",
   "login": "Вход",
   "register": "Регистрация",
-  "home_page": "Главная страница"
+  "home_page": "Главная страница",
+  "all_rights_reserved": "Все права защищены.",
+  "facebook": "Facebook",
+  "instagram": "Instagram",
+  "rules": "Правила",
+  "about_us_title": "О Нашем Доме Мебели",
+  "new_arrivals_title": "Новые поступления",
+  "install_app": "Установить приложение",
+  "categories": {
+    "kitchens": "Кухни",
+    "sofas": "Мягкая мебель",
+    "bathrooms": "Мебель для ванной",
+    "wardrobes": "Шкафы",
+    "dining": "Обеденная мебель",
+    "office": "Офисная мебель",
+    "garden": "Садовая мебель",
+    "bedroom": "Мебель для спальни"
+  }
 }
