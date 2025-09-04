@@ -5,10 +5,11 @@ import RegisterPage from "../pages/Register";
 import NotFoundPage from "../pages/NotFound";
 import MainLayout from "../layout";
 import CategoryPage from "../pages/CategoryPage";
-// --- ДОБАВЛЯЕМ ИМПОРТЫ ---
 import AdminPage from "../pages/Admin";
 import ProtectedRoute from "./ProtectedRoute";
-// -------------------------
+import ForgotPasswordPage from "../pages/ForgotPassword";
+import ResetPasswordPage from "../pages/ResetPassword";
+import OAuth2RedirectHandler from "../pages/OAuth2RedirectHandler";
 
 const router = createBrowserRouter([
   {
@@ -18,17 +19,18 @@ const router = createBrowserRouter([
       { path: "/", element: <HomePage /> },
       { path: "/login", element: <LoginPage /> },
       { path: "/register", element: <RegisterPage /> },
+      { path: "/forgot-password", element: <ForgotPasswordPage /> },
+      { path: "/reset-password", element: <ResetPasswordPage /> },
       {
         path: "/category/:categoryKey",
         element: <CategoryPage />,
       },
-      // --- ДОБАВЛЯЕМ НОВЫЙ ЗАЩИЩЕННЫЙ МАРШРУТ ---
+      { path: "/oauth2/redirect", element: <OAuth2RedirectHandler /> },
       {
         path: "/admin",
         element: <ProtectedRoute />,
         children: [{ index: true, element: <AdminPage /> }],
       },
-      // -----------------------------------------
     ],
   },
 ]);

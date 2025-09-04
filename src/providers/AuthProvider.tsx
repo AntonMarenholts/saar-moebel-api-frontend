@@ -9,11 +9,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
 
+  // Этот useEffect выполняется только один раз при первом запуске приложения
+  useEffect(() => {
+    const initApp = async () => {
+      setIsLoading(true);
+      try {
+        // Загружаем данные, которые не зависят от пользователя (категории)
+        const categoriesData = await fetchCategories();
+        categoriesData.sort((a, b) => a.name.localeCompare(b.name));
+        setCategories(categoriesData);
+
+        // Проверяем, есть ли пользователь в localStorage
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser) {
+          setUser(currentUser);
+        }
+      } catch (error) {
+        console.error("Failed to initialize app data", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initApp();
+  }, []); // Пустой массив зависимостей гарантирует, что этот код выполнится только один раз
+
   const logout = () => {
     AuthService.logout();
     setUser(null);
   };
+  
+  // Оборачиваем login в useCallback, чтобы функция не пересоздавалась при каждой перерисовке
+  const login = useCallback((userData: CurrentUser) => {
+    localStorage.setItem("user", JSON.stringify(userData));
+    setUser(userData);
+  }, []);
 
+  // Эта функция тоже обернута в useCallback для стабильности
   const refreshUserData = useCallback(async () => {
     const currentUser = AuthService.getCurrentUser();
     if (currentUser && currentUser.token) {
@@ -21,29 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    const initAuthAndData = async () => {
-      setIsLoading(true);
-
-      try {
-        const categoriesData = await fetchCategories();
-        categoriesData.sort((a, b) => a.name.localeCompare(b.name));
-        setCategories(categoriesData);
-      } catch (error) {
-        console.error("Failed to load initial site data", error);
-      }
-
-      await refreshUserData();
-      setIsLoading(false);
-    };
-    initAuthAndData();
-  }, [refreshUserData]);
-
-  const login = (userData: CurrentUser) => {
-    setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-  };
-  
   const value: AuthContextType = {
     user,
     login,
