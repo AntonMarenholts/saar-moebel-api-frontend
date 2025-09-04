@@ -18,6 +18,10 @@
     "dining": "Dining Furniture",
     "office": "Office Furniture",
     "garden": "Garden Furniture",
-    "bedroom": "Bedroom Furniture"
+    "bedroom": "Bedroom Furniture",
+    "appliances": "Home appliances",
+    "children": "Children's room",
+    "living_room": "Living room",
+    "hallway": "Hallway"
   }
 }

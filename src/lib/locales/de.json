@@ -14,6 +14,10 @@
     "dining": "Esszimmermöbel",
     "office": "Büromöbel",
     "garden": "Gartenmöbel",
-    "bedroom": "Schlafzimmermöbel"
+    "bedroom": "Schlafzimmermöbel",
+    "appliances": "Haushaltsgeräte",
+    "children": "Kindermöbel",
+    "living_room": "Wohnzimmer",
+    "hallway": "Flur"
   }
 }

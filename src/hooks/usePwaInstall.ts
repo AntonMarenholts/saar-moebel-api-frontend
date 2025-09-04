@@ -8,12 +8,12 @@ export const usePwaInstall = () => {
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (event: Event) => {
+    const handleBeforeInstallPrompt = (event: BeforeInstallPromptEvent) => {
       event.preventDefault();
-      setInstallPrompt(event as BeforeInstallPromptEvent);
+      setInstallPrompt(event);
     };
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt as EventListener);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt as EventListener);
   }, []);
 
   const handleInstall = async () => {

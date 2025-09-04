@@ -1,116 +1,45 @@
-export interface Translation {
-  locale: string;
-  name: string;
-  description: string;
-}
-
+// Описывает, как выглядит объект Категории
 export interface Category {
   id: number;
   name: string;
-  description: string;
+  imageUrl: string;
 }
 
-export interface City {
+// Описывает, как выглядит объект Товара
+export interface Product {
   id: number;
   name: string;
-  latitude?: number | null;
-  longitude?: number | null;
-}
-
-export interface Event {
-  id: number;
-  eventDate: string;
+  description: string;
+  price: number;
   imageUrl: string;
   category: Category;
-  city: City;
-  translations: Translation[];
-  status: string;
-  premium: boolean; 
-  premiumUntil?: string;
-  createdByUserId: number;
 }
 
+// Это универсальный тип для постраничных ответов от API
+// <T> означает, что это может быть страница чего угодно: Товаров, Категорий и т.д.
 export interface Page<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-  number: number;
+  number: number; // номер текущей страницы
   size: number;
 }
 
-export interface CreateEventData {
-  eventDate: string;
-  imageUrl: string;
-  categoryId: number;
-  cityId: number;
-  translations: Translation[];
-  recaptchaToken?: string;
-}
-
-export interface CategoryData {
-  name: string;
-  description?: string;
-}
-
-export interface CityData {
-  name: string;
-  latitude?: number | null;
-  longitude?: number | null;
-}
-
-export interface LoginData {
-  username?: string;
-  password?: string;
-  recaptchaToken?: string;
-}
-
-export interface RegisterData extends LoginData {
-  email?: string;
-}
-
+// Описывает, как выглядит объект Пользователя, который мы получаем после логина
 export interface CurrentUser {
   id: number;
   username: string;
   email: string;
-  roles: string[];
+  role: string; // Заменили roles на role
   token: string;
 }
 
-export interface ProfileData {
-  user: CurrentUser;
-  favoriteEvents: Event[];
+// Типы для форм входа и регистрации
+export interface LoginData {
+  username?: string;
+  password?: string;
 }
 
-export interface AdminStats {
-  totalEvents: number;
-  pendingEvents: number;
-  approvedEvents: number;
-  totalUsers: number;
-  totalCategories: number;
-}
-
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: string;
-}
-
-export interface Review {
-  id: number;
-  rating: number;
-  comment: string;
-  createdAt: string;
-  username: string;
-  userId: number;
-}
-
-export interface ReviewData {
-  rating: number;
-  comment: string;
-  recaptchaToken?: string;
-}
-export interface CityEventCount {
-  cityName: string;
-  eventCount: number;
+export interface RegisterData extends LoginData {
+  email?: string;
 }

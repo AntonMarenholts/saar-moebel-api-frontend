@@ -18,6 +18,10 @@
     "dining": "Meubles de salle à manger",
     "office": "Mobilier de bureau",
     "garden": "Mobilier de jardin",
-    "bedroom": "Meubles de chambre"
+    "bedroom": "Meubles de chambre",
+    "appliances": "Appareils électroménagers",
+    "children": "Meubles pour enfants",
+    "living_room": "Salon",
+    "hallway": "Couloir"
   }
 }
