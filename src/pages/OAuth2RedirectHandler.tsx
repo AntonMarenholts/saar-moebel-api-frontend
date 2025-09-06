@@ -1,34 +1,33 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-import type { AuthUser } from '../services/auth.service';
 
+import { useTranslation } from 'react-i18next'; // <-- Добавляем импорт
+import type { AuthUser } from '../services/auth.service';
 
 const OAuth2RedirectHandler = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+    const { t } = useTranslation(); // <-- Инициализируем функцию перевода
 
     useEffect(() => {
         const token = searchParams.get('token');
 
         if (token) {
             try {
-                // Декодируем токен, чтобы получить данные пользователя
+                // ... (логика декодирования токена остается без изменений)
                 const decodedToken: { sub: string, roles: string[], email: string, id: number } = jwtDecode(token);
                 
-                // Формируем объект пользователя
                 const user: AuthUser = {
                     token: token,
-                    username: decodedToken.sub, // 'sub' (subject) обычно является именем пользователя
-                    roles: decodedToken.roles || ['ROLE_USER'], // на всякий случай, если роли не пришли
+                    username: decodedToken.sub,
+                    roles: decodedToken.roles || ['ROLE_USER'],
                     email: decodedToken.email,
                     id: decodedToken.id,
                 };
 
-                // Сохраняем пользователя в localStorage
                 localStorage.setItem('user', JSON.stringify(user));
                 
-                // Перенаправляем в зависимости от роли
                 if (user.roles.includes('ROLE_ADMIN')) {
                     navigate('/admin/dashboard');
                 } else {
@@ -48,7 +47,7 @@ const OAuth2RedirectHandler = () => {
 
     return (
         <div className="flex items-center justify-center h-full">
-            <p>Обработка входа...</p>
+            <p>{t('oauth_processing')}</p>
         </div>
     );
 };
