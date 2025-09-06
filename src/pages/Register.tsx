@@ -47,7 +47,14 @@ export default function RegisterPage() {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+      <div className="relative w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+        {/* ++ ИЗМЕНЕНИЕ 1: Добавляем кнопку-крестик для закрытия ++ */}
+        <Link to="/" className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </Link>
+        
         <h1 className="text-2xl font-bold text-center text-gray-800">Регистрация</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -61,7 +68,7 @@ export default function RegisterPage() {
               id="username"
               type="text"
               {...register("username", { required: "Имя пользователя обязательно" })}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.username && (
               <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
@@ -79,7 +86,7 @@ export default function RegisterPage() {
               id="email"
               type="email"
               {...register("email", { required: "Email обязателен" })}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -97,7 +104,7 @@ export default function RegisterPage() {
               id="password"
               type="password"
               {...register("password", { required: "Пароль обязателен", minLength: { value: 6, message: "Пароль должен быть не менее 6 символов" } })}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-primary focus:border-brand-primary"
+              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
@@ -120,7 +127,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 font-bold text-white bg-brand-primary rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:bg-gray-400"
+              className="w-full px-4 py-2 font-bold text-white bg-brand-blue rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue disabled:bg-gray-400"
             >
               {loading ? "Регистрация..." : "Зарегистрироваться"}
             </button>
@@ -128,7 +135,8 @@ export default function RegisterPage() {
         </form>
          <p className="text-sm text-center text-gray-600">
           Уже есть аккаунт?{" "}
-          <Link to="/login" className="font-medium text-brand-primary hover:underline">
+          {/* ++ ИЗМЕНЕНИЕ 2: Исправляем цвет ссылки "Войти" ++ */}
+          <Link to="/login" className="font-medium text-brand-blue hover:underline">
             Войти
           </Link>
         </p>
