@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
+import { useTranslation } from "react-i18next";
 
 // Тип для данных формы
 type Inputs = {
@@ -12,6 +13,7 @@ type Inputs = {
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,10 +30,11 @@ export default function RegisterPage() {
     setSuccessMessage("");
 
     AuthService.register(data.username, data.email, data.password)
-      .then((response) => {
-        setSuccessMessage(response.data.message + " Теперь вы можете войти.");
+      // ++ ИЗМЕНЕНИЕ: Убираем неиспользуемый параметр "response" ++
+      .then(() => {
+        setSuccessMessage(t('registration_success'));
         setLoading(false);
-        setTimeout(() => navigate("/login"), 3000); // Перенаправляем на логин через 3 сек
+        setTimeout(() => navigate("/login"), 3000);
       })
       .catch((error) => {
         const resMessage =
@@ -48,26 +51,22 @@ export default function RegisterPage() {
   return (
     <div className="flex items-center justify-center">
       <div className="relative w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        {/* ++ ИЗМЕНЕНИЕ 1: Добавляем кнопку-крестик для закрытия ++ */}
         <Link to="/" className="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </Link>
         
-        <h1 className="text-2xl font-bold text-center text-gray-800">Регистрация</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800">{t('register')}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Имя пользователя
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              {t('username')}
             </label>
             <input
               id="username"
               type="text"
-              {...register("username", { required: "Имя пользователя обязательно" })}
+              {...register("username", { required: t('username_required') })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.username && (
@@ -76,16 +75,13 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              {t('email')}
             </label>
             <input
               id="email"
               type="email"
-              {...register("email", { required: "Email обязателен" })}
+              {...register("email", { required: t('email_required') })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.email && (
@@ -94,16 +90,13 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Пароль
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              {t('password')}
             </label>
             <input
               id="password"
               type="password"
-              {...register("password", { required: "Пароль обязателен", minLength: { value: 6, message: "Пароль должен быть не менее 6 символов" } })}
+              {...register("password", { required: t('password_required'), minLength: { value: 6, message: t('password_min_length') } })}
               className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
             />
             {errors.password && (
@@ -129,15 +122,14 @@ export default function RegisterPage() {
               disabled={loading}
               className="w-full px-4 py-2 font-bold text-white bg-brand-blue rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue disabled:bg-gray-400"
             >
-              {loading ? "Регистрация..." : "Зарегистрироваться"}
+              {loading ? t('loading') : t('register')}
             </button>
           </div>
         </form>
          <p className="text-sm text-center text-gray-600">
-          Уже есть аккаунт?{" "}
-          {/* ++ ИЗМЕНЕНИЕ 2: Исправляем цвет ссылки "Войти" ++ */}
+          {t('already_have_account')}{" "}
           <Link to="/login" className="font-medium text-brand-blue hover:underline">
-            Войти
+            {t('login')}
           </Link>
         </p>
       </div>
