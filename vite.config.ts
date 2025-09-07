@@ -13,9 +13,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
       manifest: {
-        name: 'Saarland Events',
-        short_name: 'Saarland Events',
-        description: 'Alle Veranstaltungen im Saarland. Konzerte, Festivals, Ausstellungen und mehr.',
+        name: 'Saar Möbel', // <-- ИЗМЕНЕНО
+        short_name: 'Saar Möbel', // <-- ИЗМЕНЕНО
+        description: 'Ihr Online-Möbelhaus im Saarland.',
         theme_color: '#ffffff', 
         background_color: '#ffffff', 
         display: 'standalone',
