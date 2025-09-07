@@ -43,5 +43,14 @@
   "admin_dashboard_title": "Admin Dashboard",
   "admin_dashboard_welcome": "Welcome, Administrator!",
   "oauth_processing": "Processing login...",
-  "user_not_found": "User not found."
+  "user_not_found": "User not found.",
+  "forgot_password": "Forgot your password?",
+  "forgot_password_title": "Password recovery",
+  "forgot_password_instructions": "Enter your email and we will send you a link to reset your password.",
+  "forgot_password_success": "If your email is in our system, you will receive a link to reset your password.",
+  "reset_password_title": "Password reset",
+  "new_password": "New password",
+  "reset_password_success": "Password successfully changed.",
+  "reset_password_submit": "Change password",
+  "token_invalid": "Invalid or expired token."
 }

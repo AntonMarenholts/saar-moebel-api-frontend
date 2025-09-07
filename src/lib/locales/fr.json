@@ -43,5 +43,14 @@
   "admin_dashboard_title": "Tableau de bord administrateur",
   "admin_dashboard_welcome": "Bienvenue, administrateur !",
   "oauth_processing": "Traitement de la connexion...",
-  "user_not_found": "Utilisateur non trouvé."
+  "user_not_found": "Utilisateur non trouvé.",
+  "forgot_password": "Mot de passe oublié ?",
+  "forgot_password_title": "Récupération du mot de passe",
+  "forgot_password_instructions": "Saisissez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.",
+  "forgot_password_success": "Si votre adresse e-mail est enregistrée dans notre système, vous recevrez un lien pour réinitialiser votre mot de passe.",
+  "reset_password_title": "Réinitialisation du mot de passe",
+  "new_password": "Nouveau mot de passe",
+  "reset_password_success": "Mot de passe modifié avec succès.",
+  "reset_password_submit": "Modifier le mot de passe",
+  "token_invalid": "Jeton invalide ou expiré."
 }

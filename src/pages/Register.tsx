@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // <-- Добавлено
 
   const {
     register,
@@ -30,7 +31,6 @@ export default function RegisterPage() {
     setSuccessMessage("");
 
     AuthService.register(data.username, data.email, data.password)
-      // ++ ИЗМЕНЕНИЕ: Убираем неиспользуемый параметр "response" ++
       .then(() => {
         setSuccessMessage(t('registration_success'));
         setLoading(false);
@@ -93,12 +93,30 @@ export default function RegisterPage() {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               {t('password')}
             </label>
-            <input
-              id="password"
-              type="password"
-              {...register("password", { required: t('password_required'), minLength: { value: 6, message: t('password_min_length') } })}
-              className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
-            />
+            <div className="relative">
+                <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    {...register("password", { required: t('password_required'), minLength: { value: 6, message: t('password_min_length') } })}
+                    className="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-brand-blue focus:border-brand-blue"
+                />
+                <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500"
+                >
+                    {showPassword ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fillRule="evenodd" d="M.458 10C1.73 5.943 5.522 3 10 3s8.27 2.943 9.542 7c-1.272 4.057-5.022 7-9.542 7S1.73 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                    </svg>
+                    ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.27 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.242 4.242a2 2 0 012.828 2.828l-2.828-2.828zM10 17a7 7 0 01-7-7c0-1.789.66-3.443 1.764-4.752l1.432 1.432A4.982 4.982 0 008 10a5 5 0 005 5c.28 0 .553-.024.82-.07l1.432 1.432A6.96 6.96 0 0110 17z" clipRule="evenodd" />
+                    </svg>
+                    )}
+                </button>
+            </div>
             {errors.password && (
               <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
             )}
