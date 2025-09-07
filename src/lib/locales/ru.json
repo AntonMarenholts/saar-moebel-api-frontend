@@ -43,5 +43,14 @@
   "admin_dashboard_title": "Панель Администратора",
   "admin_dashboard_welcome": "Добро пожаловать, администратор!",
   "oauth_processing": "Обработка входа...",
-  "user_not_found": "Пользователь не найден."
+  "user_not_found": "Пользователь не найден.",
+  "forgot_password": "Забыли пароль?",
+  "forgot_password_title": "Восстановление пароля",
+  "forgot_password_instructions": "Введите ваш email, и мы вышлем вам ссылку для сброса пароля.",
+  "forgot_password_success": "Если ваш email есть в нашей системе, вы получите ссылку для сброса пароля.",
+  "reset_password_title": "Сброс пароля",
+  "new_password": "Новый пароль",
+  "reset_password_success": "Пароль успешно изменен.",
+  "reset_password_submit": "Сменить пароль",
+  "token_invalid": "Неверный или истекший токен."
 }

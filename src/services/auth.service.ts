@@ -41,25 +41,19 @@ const login = async (username: string, password: string): Promise<AuthUser> => {
   return response.data;
 };
 
-/**
- * Выход из системы (просто удаляем данные из localStorage)
- */
+
 const logout = () => {
   localStorage.removeItem("user");
 };
 
-/**
- * Получение текущего пользователя из localStorage
- */
+
 const getCurrentUser = (): AuthUser | null => {
   const userStr = localStorage.getItem("user");
   if (userStr) {
     const user = JSON.parse(userStr) as AuthUser;
-    
-    // Проверка срока действия токена
     const decodedJwt: { exp: number } = jwtDecode(user.token);
     if (decodedJwt.exp * 1000 < Date.now()) {
-      // Если токен истек, выходим из системы
+      
       logout();
       return null;
     }
@@ -69,11 +63,24 @@ const getCurrentUser = (): AuthUser | null => {
   return null;
 };
 
+const forgotPassword = (email: string) => {
+  return axios.post(API_URL + "forgot-password", { email });
+};
+
+/**
+ * Отправляет новый пароль и токен для его смены.
+ */
+const resetPassword = (token: string, password: string) => {
+  return axios.post(API_URL + `reset-password?token=${token}`, { password });
+};
+
 const AuthService = {
   register, // <-- Добавили новую функцию
   login,
   logout,
   getCurrentUser,
+  forgotPassword, // <-- Добавили
+  resetPassword,
 };
 
 export default AuthService;

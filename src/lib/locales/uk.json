@@ -43,5 +43,14 @@
   "admin_dashboard_title": "Панель адміністратора",
   "admin_dashboard_welcome": "Ласкаво просимо, адміністраторе!",
   "oauth_processing": "Обробка входу...",
-  "user_not_found": "Користувача не знайдено."
+  "user_not_found": "Користувача не знайдено.",
+  "forgot_password": "Забули пароль?",
+  "forgot_password_title": "Відновлення пароля",
+  "forgot_password_instructions": "Введіть ваш email, і ми надішлемо вам посилання для скидання пароля.",
+  "forgot_password_success": "Якщо ваш email є в нашій системі, ви отримаєте посилання для скидання пароля.",
+  "reset_password_title": "Скидання пароля",
+  "new_password": "Новий пароль",
+  "reset_password_success": "Пароль успішно змінено.",
+  "reset_password_submit": "Змінити пароль",
+  "token_invalid": "Неправильний або токен, що минув."
 }

@@ -43,5 +43,14 @@
   "admin_dashboard_title": "Administrator-Dashboard",
   "admin_dashboard_welcome": "Willkommen, Administrator!",
   "oauth_processing": "Anmeldung wird verarbeitet...",
-  "user_not_found": "Benutzer nicht gefunden."
+  "user_not_found": "Benutzer nicht gefunden.",
+  "forgot_password": "Passwort vergessen?",
+  "forgot_password_title": "Passwort wiederherstellen",
+  "forgot_password_instructions": "Geben Sie Ihre E-Mail-Adresse ein. Wir senden Ihnen dann einen Link zum Zurücksetzen Ihres Passworts.",
+  "forgot_password_success": "Wenn Ihre E-Mail-Adresse in unserem System gespeichert ist, erhalten Sie einen Link zum Zurücksetzen Ihres Passworts.",
+  "reset_password_title": "Passwort zurücksetzen",
+  "new_password": "Neues Passwort",
+  "reset_password_success": "Passwort erfolgreich geändert.",
+  "reset_password_submit": "Passwort ändern",
+  "token_invalid": "Ungültiger oder abgelaufener Token."
 }
