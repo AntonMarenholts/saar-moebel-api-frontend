@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useState } from "react"; // Для пагинации новинок
-// import Pagination from "../components/Pagination"; // Если будете использовать компонент пагинации
+import { useState, useEffect, useMemo } from "react"; // <-- Добавлен useMemo
+import type { Category } from "../services/product.service";
+import ProductService from "../services/product.service";
 
-// --- ЗАГЛУШКА ДЛЯ ПАГИНАЦИИ (можно заменить на реальный компонент) ---
+// Компонент-заглушка для пагинации (без изменений)
 const DummyPagination = ({
   currentPage,
   totalPages,
@@ -12,44 +13,42 @@ const DummyPagination = ({
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}) => {
-  return (
-    <div className="flex justify-center mt-8 space-x-2">
-      {Array.from({ length: totalPages }).map((_, index) => (
-        <button
-          key={index}
-          onClick={() => onPageChange(index)}
-          className={`px-4 py-2 rounded-lg ${
-            currentPage === index
-              ? "bg-brand-primary text-white"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          {index + 1}
-        </button>
-      ))}
-    </div>
-  );
-};
-// --- КОНЕЦ ЗАГЛУШКИ ПАГИНАЦИИ ---
+}) => (
+  <div className="flex justify-center mt-8 space-x-2">
+    {Array.from({ length: totalPages }).map((_, index) => (
+      <button
+        key={index}
+        onClick={() => onPageChange(index)}
+        className={`px-4 py-2 rounded-lg ${
+          currentPage === index
+            ? "bg-brand-blue text-white"
+            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+        }`}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+);
 
-// Компонент для секции "Новинки"
+// Компонент для секции "Новинки" (без изменений)
 const NewArrivals = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = 2; // Пример: 2 страницы новинок по 3 элемента
+  const totalPages = 2;
   const itemsPerPage = 3;
 
   const allNewItems = Array(6)
     .fill(0)
     .map((_, i) => ({
-      // Теперь каждый элемент имеет свой id
       id: i + 1,
-      name: `Название Новинки ${i + 1}`,
-      description: `Краткое описание нового товара ${
-        i + 1
-      }. Этот текст является заглушкой и будет заменен реальными данными.`,
-      imageUrl: `https://via.placeholder.com/400x200?text=Новинка+${i + 1}`, // Пример заглушки
+      name: t(`new_arrival_name_${i + 1}`, {
+        defaultValue: `Название Новинки ${i + 1}`,
+      }),
+      description: t(`new_arrival_desc_${i + 1}`, {
+        defaultValue: `Краткое описание нового товара ${i + 1}.`,
+      }),
+      imageUrl: `https://via.placeholder.com/400x200?text=New+Arrival+${i + 1}`,
     }));
 
   const startIndex = currentPage * itemsPerPage;
@@ -71,7 +70,7 @@ const NewArrivals = () => {
               <img
                 src={item.imageUrl}
                 alt={item.name}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110" // Увеличение фото
+                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
               />
             </div>
             <div className="md:w-2/3 p-6">
@@ -81,102 +80,82 @@ const NewArrivals = () => {
           </div>
         ))}
       </div>
-      {/* Пагинация для Новинок */}
       <DummyPagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-      {/* Если у вас есть компонент Pagination, используйте его:
-            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
-            */}
     </section>
   );
 };
 
-// Компонент для сетки категорий (с изменениями для фото)
 const CategoryGrid = () => {
-  const { t } = useTranslation();
-  const categories = [
-    {
-      key: "kitchens",
-      name: t("kitchens"),
-      imageUrl: "https://via.placeholder.com/300?text=Кухни",
-    },
-    {
-      key: "bedroom_furniture",
-      name: t("bedroom_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Спальни",
-    },
-    {
-      key: "living_rooms",
-      name: t("living_rooms"),
-      imageUrl: "https://via.placeholder.com/300?text=Гостиные",
-    },
-    {
-      key: "children_furniture",
-      name: t("children_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Детская",
-    },
-    {
-      key: "hallways",
-      name: t("hallways"),
-      imageUrl: "https://via.placeholder.com/300?text=Прихожие",
-    },
-    {
-      key: "office_furniture",
-      name: t("office_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Офис",
-    },
-    {
-      key: "garden_furniture",
-      name: t("garden_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Сад",
-    },
-    {
-      key: "bathroom_furniture",
-      name: t("bathroom_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Ванная",
-    },
-    {
-      key: "wardrobes",
-      name: t("wardrobes"),
-      imageUrl: "https://via.placeholder.com/300?text=Шкафы",
-    },
-    {
-      key: "chairs",
-      name: t("chairs"),
-      imageUrl: "https://via.placeholder.com/300?text=Стулья",
-    },
-    {
-      key: "dining_furniture",
-      name: t("dining_furniture"),
-      imageUrl: "https://via.placeholder.com/300?text=Обеденная",
-    },
-    {
-      key: "cabinets",
-      name: t("cabinets"),
-      imageUrl: "https://via.placeholder.com/300?text=Кабинеты",
-    },
-  ];
+  const { t, i18n } = useTranslation(); // <-- Добавляем i18n для отслеживания языка
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    ProductService.getCategories()
+      .then(setCategories)
+      .catch((error) => console.error("Failed to fetch categories:", error));
+  }, []);
+
+  // ++ НАЧАЛО ИЗМЕНЕНИЙ ++
+  // Создаем мемоизированный (кэшированный) отсортированный список категорий.
+  // Он будет пересчитываться только когда меняются сами категории или язык.
+  const sortedCategories = useMemo(() => {
+    // Создаем копию массива, чтобы не изменять исходное состояние
+    return [...categories].sort((a, b) => {
+      // Получаем переведенные названия для сравнения
+      const nameA = t(a.slug, { defaultValue: a.name });
+      const nameB = t(b.slug, { defaultValue: b.name });
+      
+      // localeCompare обеспечивает правильную сортировку для разных алфавитов
+      return nameA.localeCompare(nameB, i18n.language);
+    });
+  }, [categories, t, i18n.language]);
+  // -- КОНЕЦ ИЗМЕНЕНИЙ --
+
+  if (categories.length === 0) {
+    return <div>{t("loading")}</div>;
+  }
 
   return (
     <section className="text-gray-800">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {categories.map((cat) => (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        {/* Используем отсортированный массив sortedCategories для рендеринга */}
+        {sortedCategories.map((cat) => (
           <Link
-            to={`/category/${cat.key}`}
-            key={cat.key}
+            to={`/category/${cat.slug}`}
+            key={cat.id}
             className="group relative bg-white rounded-lg shadow-md overflow-hidden aspect-square hover:shadow-xl transition-transform duration-300 hover:scale-105"
           >
-            <img
-              src={cat.imageUrl} // Использование заглушки
-              alt={cat.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" // Увеличение фото
-            />
+            {cat.imageUrl ? (
+              <img
+                src={cat.imageUrl}
+                alt={cat.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <svg
+                  className="w-12 h-12 text-gray-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm16.5-1.5-3-3"
+                  />
+                </svg>
+              </div>
+            )}
             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-center text-white p-2">
-              <span className="font-bold text-lg group-hover:text-brand-primary transition-colors">
-                {cat.name}
+              <span className="font-bold text-lg group-hover:text-brand-blue transition-colors">
+                {t(cat.slug, { defaultValue: cat.name })}
               </span>
             </div>
           </Link>
