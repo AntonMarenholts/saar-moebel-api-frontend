@@ -11,7 +11,7 @@ export interface Category {
   imageUrl?: string;
 }
 
-// ++ НОВЫЙ ТИП ДЛЯ ТОВАРА ++
+// Тип для товара
 export interface Product {
     id: number;
     name: string;
@@ -30,24 +30,26 @@ export interface NewProductData {
   categoryId: number;
 }
 
-/**
- * ++ НОВАЯ ФУНКЦИЯ: Получение списка всех товаров ++
- */
+// Получение списка всех товаров
 const getProducts = async (): Promise<Product[]> => {
   const response = await axios.get(API_URL + "/products");
   return response.data;
 };
 
+// ++ НОВАЯ ФУНКЦИЯ: Получение товаров по slug категории ++
+const getProductsByCategory = async (slug: string): Promise<Product[]> => {
+    const response = await axios.get(`${API_URL}/products/category/${slug}`);
+    return response.data;
+};
 
-/**
- * Получение списка всех категорий
- */
+
+// Получение списка всех категорий
 const getCategories = async (): Promise<Category[]> => {
   const response = await axios.get(API_URL + "/categories");
   return response.data;
 };
 
-const createCategory = async (name: string, slug: string) => {
+const createCategory = async (name: string, slug: string): Promise<Category> => { // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -69,7 +71,7 @@ const deleteCategory = async (id: number) => {
   });
 };
 
-const updateCategoryImage = async (id: number, imageUrl: string) => {
+const updateCategoryImage = async (id: number, imageUrl: string): Promise<Category> => { // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -83,9 +85,6 @@ const updateCategoryImage = async (id: number, imageUrl: string) => {
   return response.data;
 };
 
-/**
- * Загрузка файла изображения на сервер
- */
 const uploadImage = async (file: File): Promise<{ imageUrl: string }> => {
   const formData = new FormData();
   formData.append("file", file);
@@ -103,7 +102,6 @@ const uploadImage = async (file: File): Promise<{ imageUrl: string }> => {
 };
 
 const createProduct = async (productData: NewProductData) => {
-  // Получаем токен текущего пользователя для авторизации
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -116,7 +114,8 @@ const createProduct = async (productData: NewProductData) => {
 };
 
 const ProductService = {
-  getProducts, // <-- Добавили
+  getProducts,
+  getProductsByCategory, // <-- Добавили новую функцию сюда
   getCategories,
   createProduct,
   createCategory,

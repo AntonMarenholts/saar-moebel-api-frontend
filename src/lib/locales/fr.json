@@ -85,5 +85,13 @@
   "category_load_error": "Échec du chargement des catégories.",
   "catalog_title": "Catalogue de produits",
   "product_load_error": "Échec du chargement des produits.",
-  "add_to_cart": "Ajouter au panier"
+  "add_to_cart": "Ajouter au panier",
+  "admin_manage_news": "Gérer les actualités",
+  "add_news_article": "Ajouter une actualité",
+  "save_news": "Enregistrer l'actualité",
+  "existing_news": "Actualités existantes",
+  "no_news_yet": "Aucune actualité pour le moment.",
+  "news_title_de": "Titre (DE)",
+  "news_content_de": "Contenu (DE)",
+  "admin_go_to_site": "Aller sur le site"
 }
