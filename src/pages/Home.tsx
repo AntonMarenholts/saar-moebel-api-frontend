@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react"; // <-- Добавлен useMemo
+import { useState, useEffect, useMemo } from "react";
 import type { Category } from "../services/product.service";
 import ProductService from "../services/product.service";
 
-// Компонент-заглушка для пагинации (без изменений)
 const DummyPagination = ({
   currentPage,
   totalPages,
@@ -31,7 +30,6 @@ const DummyPagination = ({
   </div>
 );
 
-// Компонент для секции "Новинки" (без изменений)
 const NewArrivals = () => {
   const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(0);
@@ -90,7 +88,7 @@ const NewArrivals = () => {
 };
 
 const CategoryGrid = () => {
-  const { t, i18n } = useTranslation(); // <-- Добавляем i18n для отслеживания языка
+  const { t, i18n } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -99,21 +97,13 @@ const CategoryGrid = () => {
       .catch((error) => console.error("Failed to fetch categories:", error));
   }, []);
 
-  // ++ НАЧАЛО ИЗМЕНЕНИЙ ++
-  // Создаем мемоизированный (кэшированный) отсортированный список категорий.
-  // Он будет пересчитываться только когда меняются сами категории или язык.
   const sortedCategories = useMemo(() => {
-    // Создаем копию массива, чтобы не изменять исходное состояние
     return [...categories].sort((a, b) => {
-      // Получаем переведенные названия для сравнения
       const nameA = t(a.slug, { defaultValue: a.name });
       const nameB = t(b.slug, { defaultValue: b.name });
-      
-      // localeCompare обеспечивает правильную сортировку для разных алфавитов
       return nameA.localeCompare(nameB, i18n.language);
     });
   }, [categories, t, i18n.language]);
-  // -- КОНЕЦ ИЗМЕНЕНИЙ --
 
   if (categories.length === 0) {
     return <div>{t("loading")}</div>;
@@ -122,7 +112,6 @@ const CategoryGrid = () => {
   return (
     <section className="text-gray-800">
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-        {/* Используем отсортированный массив sortedCategories для рендеринга */}
         {sortedCategories.map((cat) => (
           <Link
             to={`/category/${cat.slug}`}
@@ -153,8 +142,9 @@ const CategoryGrid = () => {
                 </svg>
               </div>
             )}
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-center text-white p-2">
-              <span className="font-bold text-lg group-hover:text-brand-blue transition-colors">
+
+            <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center text-center text-white p-2">
+              <span className="font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {t(cat.slug, { defaultValue: cat.name })}
               </span>
             </div>

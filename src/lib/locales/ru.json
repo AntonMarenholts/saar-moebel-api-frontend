@@ -85,5 +85,13 @@
   "category_load_error": "Не удалось загрузить категории?",
   "catalog_title": "Каталог товаров",
   "product_load_error": "Не удалось загрузить товары?",
-  "add_to_cart": "Добавить в корзину"
+  "add_to_cart": "Добавить в корзину",
+  "admin_manage_news": "Управление новостями",
+  "add_news_article": "Добавить новость",
+  "save_news": "Сохранить новость",
+  "existing_news": "Существующие новости",
+  "no_news_yet": "Новостей пока нет.",
+  "news_title_de": "Заголовок (DE)",
+  "news_content_de": "Содержимое (DE)",
+  "admin_go_to_site": "Перейти на сайт"
 }

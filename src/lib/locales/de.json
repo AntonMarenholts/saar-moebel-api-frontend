@@ -85,5 +85,13 @@
   "category_load_error": "Kategorien konnten nicht geladen werden.",
   "catalog_title": "Produktkatalog",
   "product_load_error": "Produkte konnten nicht geladen werden.",
-  "add_to_cart": "In den Warenkorb"
+  "add_to_cart": "In den Warenkorb",
+  "admin_manage_news": "Neuigkeiten verwalten",
+  "add_news_article": "Neuigkeit hinzufügen",
+  "save_news": "Neuigkeit speichern",
+  "existing_news": "Vorhandene Neuigkeiten",
+  "no_news_yet": "Es gibt noch keine Neuigkeiten.",
+  "news_title_de": "Titel (DE)",
+  "news_content_de": "Inhalt (DE)",
+  "admin_go_to_site": "Zur Seite gehen"
 }

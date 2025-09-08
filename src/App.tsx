@@ -12,6 +12,8 @@ import ResetPasswordPage from './pages/ResetPassword';
 import AddProductPage from './pages/AddProduct';
 import AdminRoute from './components/auth/AdminRoute';
 import ManageCategoriesPage from './pages/ManageCategories'; // <-- Импортируем новую страницу
+import ManageNewsPage from './pages/ManageNews';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/category/:slug" element={<CategoryPage />} />
         
         {/* --- Страницы для авторизованных пользователей --- */}
         <Route path="/profile" element={<ProfilePage />} />
@@ -33,7 +36,8 @@ function App() {
         <Route element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/add-product" element={<AddProductPage />} />
-          <Route path="/admin/categories" element={<ManageCategoriesPage />} /> {/* <-- Добавляем новый маршрут */}
+          <Route path="/admin/categories" element={<ManageCategoriesPage />} /> 
+          <Route path="/admin/news" element={<ManageNewsPage />} />
         </Route>
 
         {/* --- Страница не найдена --- */}

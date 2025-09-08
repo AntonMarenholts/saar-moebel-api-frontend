@@ -6,7 +6,7 @@ import AuthService from "../services/auth.service";
 
 const Logo = () => (
   <svg
-    className="w-10 h-10 text-brand-primary"
+    className="w-10 h-10 text-brand-blue"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
@@ -41,8 +41,9 @@ export default function Header() {
     AuthService.logout();
     setCurrentUser(null);
     navigate("/");
-    window.location.reload();
   };
+
+  const isAdmin = currentUser?.roles.includes("ROLE_ADMIN");
 
   return (
     <header className="sticky top-0 bg-brand-dark text-white shadow-md z-50">
@@ -65,9 +66,29 @@ export default function Header() {
           </select>
 
           {currentUser ? (
-            // Если пользователь вошел в систему
             <div className="flex items-center gap-4">
+              <Link
+                to="/cart"
+                className="relative p-2 hover:bg-gray-700 rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                  />
+                </svg>
+              </Link>
+
               <span className="font-semibold">{currentUser.username}</span>
+
               <button
                 onClick={handleLogout}
                 className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -76,15 +97,40 @@ export default function Header() {
               </button>
             </div>
           ) : (
-            // Если пользователь не вошел
             <Link to="/login">
-              <button className="bg-brand-primary hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-brand-blue hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
                 {t("login")}
               </button>
             </Link>
           )}
         </div>
       </div>
+
+      {/* --- НОВАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ДЛЯ АДМИНА --- */}
+      {isAdmin && (
+        <div className="bg-gray-700">
+          <div className="container mx-auto flex items-center justify-center p-2 gap-4">
+            <Link
+              to="/admin/categories"
+              className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
+            >
+              {t("admin_manage_categories")}
+            </Link>
+            <Link
+              to="/admin/add-product"
+              className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
+            >
+              {t("admin_add_product")}
+            </Link>
+            <Link
+              to="/admin/news"
+              className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
+            >
+              {t("admin_manage_news")}
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 }

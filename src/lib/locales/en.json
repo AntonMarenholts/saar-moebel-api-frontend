@@ -85,5 +85,13 @@
   "category_load_error": "Failed to load categories.",
   "catalog_title": "Product Catalog",
   "product_load_error": "Failed to load products.",
-  "add_to_cart": "Add to Cart"
+  "add_to_cart": "Add to Cart",
+  "admin_manage_news": "Manage news",
+  "add_news_article": "Add news",
+  "save_news": "Save news",
+  "existing_news": "Existing news",
+  "no_news_yet": "There are no news yet.",
+  "news_title_de": "Title (DE)",
+  "news_content_de": "Content (DE)",
+  "admin_go_to_site": "Go to Site"
 }

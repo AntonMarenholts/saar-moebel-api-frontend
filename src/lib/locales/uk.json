@@ -85,5 +85,13 @@
   "category_load_error": "Не вдалося завантажити категорії.",
   "catalog_title": "Каталог товарів",
   "product_load_error": "Не вдалося завантажити товари.",
-  "add_to_cart": "Додати до кошика"
+  "add_to_cart": "Додати до кошика",
+  "admin_manage_news": "Керування новинами",
+  "add_news_article": "Додати новину",
+  "save_news": "Зберегти новину",
+  "existing_news": "Існуючі новини",
+  "no_news_yet": "Новин поки немає.",
+  "news_title_de": "Заголовок (DE)",
+  "news_content_de": "Вміст (DE)",
+  "admin_go_to_site": "Перейти на сайт"
 }
