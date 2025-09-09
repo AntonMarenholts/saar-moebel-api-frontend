@@ -3,89 +3,64 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import type { Category } from "../services/product.service";
 import ProductService from "../services/product.service";
+import NewsService from "../services/news.service";
+import type { NewsArticle } from "../services/news.service";
 
-const DummyPagination = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: {
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-}) => (
-  <div className="flex justify-center mt-8 space-x-2">
-    {Array.from({ length: totalPages }).map((_, index) => (
-      <button
-        key={index}
-        onClick={() => onPageChange(index)}
-        className={`px-4 py-2 rounded-lg ${
-          currentPage === index
-            ? "bg-brand-blue text-white"
-            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-        }`}
-      >
-        {index + 1}
-      </button>
-    ))}
-  </div>
-);
-
-const NewArrivals = () => {
+const LatestNews = () => {
   const { t } = useTranslation();
-  const [currentPage, setCurrentPage] = useState(0);
-  const totalPages = 2;
-  const itemsPerPage = 3;
+  const [latestNews, setLatestNews] = useState<NewsArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const allNewItems = Array(6)
-    .fill(0)
-    .map((_, i) => ({
-      id: i + 1,
-      name: t(`new_arrival_name_${i + 1}`, {
-        defaultValue: `Название Новинки ${i + 1}`,
-      }),
-      description: t(`new_arrival_desc_${i + 1}`, {
-        defaultValue: `Краткое описание нового товара ${i + 1}.`,
-      }),
-      imageUrl: `https://via.placeholder.com/400x200?text=New+Arrival+${i + 1}`,
-    }));
+  useEffect(() => {
+    setLoading(true);
+    NewsService.getLatestNews()
+      .then((data) => {
+        setLatestNews(data);
+      })
+      .catch(() => setError("Failed to fetch latest news"))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const startIndex = currentPage * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentItems = allNewItems.slice(startIndex, endIndex);
+  if (loading) {
+    return <div>{t("loading")}</div>;
+  }
+  
+  if (error) {
+    return <div className="text-red-500 text-center">{error}</div>;
+  }
 
   return (
     <section className="mb-12 text-gray-800">
       <h2 className="text-3xl font-bold text-center mb-8">
-        {t("new_arrivals")}
+        {t("latest_news")}
       </h2>
-      <div className="grid grid-cols-1 gap-8">
-        {currentItems.map((item) => (
+      <div className="space-y-8">
+        {latestNews.map((article) => (
           <div
-            key={item.id}
-            className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden"
+            key={article.id}
+            className="group flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden w-full transition-shadow duration-300 hover:shadow-xl"
           >
-            <div className="md:w-1/3 flex-shrink-0 relative overflow-hidden">
+            
+            <div className="md:w-1/3 lg:w-1/4 flex-shrink-0 relative overflow-hidden h-64 md:h-auto">
               <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+                src={article.imageUrl}
+                alt={article.titleDe}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
             </div>
-            <div className="md:w-2/3 p-6">
-              <h3 className="text-xl font-bold mb-2">{item.name}</h3>
-              <p className="text-gray-700">{item.description}</p>
+            
+            <div className="p-6 flex flex-col flex-grow">
+              <h3 className="text-xl font-bold mb-2 line-clamp-2">{article.titleDe}</h3>
+              <p className="text-gray-700 mb-4 flex-grow line-clamp-4">{article.contentDe}</p> 
             </div>
           </div>
         ))}
       </div>
-      <DummyPagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
     </section>
   );
 };
+
 
 const CategoryGrid = () => {
   const { t, i18n } = useTranslation();
@@ -155,10 +130,11 @@ const CategoryGrid = () => {
   );
 };
 
+
 export default function HomePage() {
   return (
     <div className="space-y-12">
-      <NewArrivals />
+      <LatestNews />
       <CategoryGrid />
     </div>
   );

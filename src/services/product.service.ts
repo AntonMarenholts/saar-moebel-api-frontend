@@ -13,12 +13,12 @@ export interface Category {
 
 // Тип для товара
 export interface Product {
-    id: number;
-    name: string;
-    description: string;
-    price: number;
-    imageUrl: string;
-    category: Category;
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  category: Category;
 }
 
 // Тип для данных нового товара
@@ -38,10 +38,9 @@ const getProducts = async (): Promise<Product[]> => {
 
 // ++ НОВАЯ ФУНКЦИЯ: Получение товаров по slug категории ++
 const getProductsByCategory = async (slug: string): Promise<Product[]> => {
-    const response = await axios.get(`${API_URL}/products/category/${slug}`);
-    return response.data;
+  const response = await axios.get(`${API_URL}/products/category/${slug}`);
+  return response.data;
 };
-
 
 // Получение списка всех категорий
 const getCategories = async (): Promise<Category[]> => {
@@ -49,7 +48,11 @@ const getCategories = async (): Promise<Category[]> => {
   return response.data;
 };
 
-const createCategory = async (name: string, slug: string): Promise<Category> => { // Добавлен тип возвращаемого значения
+const createCategory = async (
+  name: string,
+  slug: string
+): Promise<Category> => {
+  // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -71,7 +74,11 @@ const deleteCategory = async (id: number) => {
   });
 };
 
-const updateCategoryImage = async (id: number, imageUrl: string): Promise<Category> => { // Добавлен тип возвращаемого значения
+const updateCategoryImage = async (
+  id: number,
+  imageUrl: string
+): Promise<Category> => {
+  // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -113,10 +120,28 @@ const createProduct = async (productData: NewProductData) => {
   return response.data;
 };
 
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalPages: number;
+  totalElements: number;
+  number: number; // номер текущей страницы
+}
+
+const getLatestProducts = async (
+  page: number,
+  size: number
+): Promise<PaginatedResponse<Product>> => {
+  const response = await axios.get(
+    `${API_URL}/products/latest?page=${page}&size=${size}`
+  );
+  return response.data;
+};
+
 const ProductService = {
   getProducts,
-  getProductsByCategory, // <-- Добавили новую функцию сюда
+  getProductsByCategory,
   getCategories,
+  getLatestProducts,
   createProduct,
   createCategory,
   deleteCategory,
