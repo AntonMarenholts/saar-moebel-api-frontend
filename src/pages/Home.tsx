@@ -101,7 +101,7 @@ const LatestNews = () => {
 
 
 const CategoryGrid = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
@@ -110,17 +110,14 @@ const CategoryGrid = () => {
       .catch((error) => console.error("Failed to fetch categories:", error));
   }, []);
 
+  // --- НАЧАЛО ИЗМЕНЕНИЙ ---
   const getCategoryName = (category: Category) => {
     const lang = i18n.language;
     if (lang === 'en') return category.nameEn || category.nameDe;
     if (lang === 'fr') return category.nameFr || category.nameDe;
     if (lang === 'ru') return category.nameRu || category.nameDe;
     if (lang === 'uk') return category.nameUk || category.nameDe;
-    
-    if (!category.nameDe) {
-        return t(category.slug, { defaultValue: category.slug });
-    }
-    return category.nameDe;
+    return category.nameDe; // По умолчанию всегда немецкий
   };
 
   const sortedCategories = useMemo(() => {
@@ -130,6 +127,7 @@ const CategoryGrid = () => {
       return nameA.localeCompare(nameB, i18n.language);
     });
   }, [categories, i18n.language]);
+  // --- КОНЕЦ ИЗМЕНЕНИЙ ---
 
   if (categories.length === 0) {
     return <div>{t("loading")}</div>;
