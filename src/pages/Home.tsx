@@ -1,26 +1,44 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import type { Category } from "../services/product.service";
 import ProductService from "../services/product.service";
 import NewsService from "../services/news.service";
 import type { NewsArticle } from "../services/news.service";
 
+const NEWS_PER_PAGE = 6;
+
 const LatestNews = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [latestNews, setLatestNews] = useState<NewsArticle[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchNews = useCallback(() => {
     setLoading(true);
-    NewsService.getLatestNews()
+    NewsService.getLatestNews(currentPage, NEWS_PER_PAGE)
       .then((data) => {
-        setLatestNews(data);
+        setLatestNews(data.content);
+        setTotalPages(data.totalPages);
       })
       .catch(() => setError("Failed to fetch latest news"))
       .finally(() => setLoading(false));
-  }, []);
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchNews();
+  }, [fetchNews]);
+
+  const getTranslated = (article: NewsArticle, field: 'title' | 'content') => {
+    const lang = i18n.language;
+    if (lang === 'en') return article[`${field}En`] || article[`${field}De`];
+    if (lang === 'fr') return article[`${field}Fr`] || article[`${field}De`];
+    if (lang === 'ru') return article[`${field}Ru`] || article[`${field}De`];
+    if (lang === 'uk') return article[`${field}Uk`] || article[`${field}De`];
+    return article[`${field}De`];
+  };
 
   if (loading) {
     return <div>{t("loading")}</div>;
@@ -41,22 +59,42 @@ const LatestNews = () => {
             key={article.id}
             className="group flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden w-full transition-shadow duration-300 hover:shadow-xl"
           >
-            
             <div className="md:w-1/3 lg:w-1/4 flex-shrink-0 relative overflow-hidden h-64 md:h-auto">
               <img
                 src={article.imageUrl}
-                alt={article.titleDe}
+                alt={getTranslated(article, 'title')}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
             </div>
-            
             <div className="p-6 flex flex-col flex-grow">
-              <h3 className="text-xl font-bold mb-2 line-clamp-2">{article.titleDe}</h3>
-              <p className="text-gray-700 mb-4 flex-grow line-clamp-4">{article.contentDe}</p> 
+              <h3 className="text-xl font-bold mb-2 line-clamp-2">{getTranslated(article, 'title')}</h3>
+              <p className="text-gray-700 mb-4 flex-grow line-clamp-4">{getTranslated(article, 'content')}</p> 
             </div>
           </div>
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-4 mt-8">
+            <button
+                onClick={() => setCurrentPage(prev => prev - 1)}
+                disabled={currentPage === 0}
+                className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+            >
+                {t('previous_page')}
+            </button>
+            <span className="text-sm font-medium text-gray-700">
+                {t('page')} {currentPage + 1} / {totalPages}
+            </span>
+            <button
+                onClick={() => setCurrentPage(prev => prev + 1)}
+                disabled={currentPage + 1 >= totalPages}
+                className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+            >
+                {t('next_page')}
+            </button>
+        </div>
+      )}
     </section>
   );
 };
@@ -72,13 +110,26 @@ const CategoryGrid = () => {
       .catch((error) => console.error("Failed to fetch categories:", error));
   }, []);
 
+  const getCategoryName = (category: Category) => {
+    const lang = i18n.language;
+    if (lang === 'en') return category.nameEn || category.nameDe;
+    if (lang === 'fr') return category.nameFr || category.nameDe;
+    if (lang === 'ru') return category.nameRu || category.nameDe;
+    if (lang === 'uk') return category.nameUk || category.nameDe;
+    
+    if (!category.nameDe) {
+        return t(category.slug, { defaultValue: category.slug });
+    }
+    return category.nameDe;
+  };
+
   const sortedCategories = useMemo(() => {
     return [...categories].sort((a, b) => {
-      const nameA = t(a.slug, { defaultValue: a.name });
-      const nameB = t(b.slug, { defaultValue: b.name });
+      const nameA = getCategoryName(a);
+      const nameB = getCategoryName(b);
       return nameA.localeCompare(nameB, i18n.language);
     });
-  }, [categories, t, i18n.language]);
+  }, [categories, i18n.language]);
 
   if (categories.length === 0) {
     return <div>{t("loading")}</div>;
@@ -96,7 +147,7 @@ const CategoryGrid = () => {
             {cat.imageUrl ? (
               <img
                 src={cat.imageUrl}
-                alt={cat.name}
+                alt={getCategoryName(cat)}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
             ) : (
@@ -120,7 +171,7 @@ const CategoryGrid = () => {
 
             <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center text-center text-white p-2">
               <span className="font-bold text-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {t(cat.slug, { defaultValue: cat.name })}
+                {getCategoryName(cat)}
               </span>
             </div>
           </Link>

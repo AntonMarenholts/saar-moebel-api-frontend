@@ -6,9 +6,13 @@ const API_URL = import.meta.env.VITE_API_BASE_URL;
 // Тип для категории
 export interface Category {
   id: number;
-  name: string;
+  nameDe: string;
   slug: string;
   imageUrl?: string;
+  nameEn?: string;
+  nameFr?: string;
+  nameRu?: string;
+  nameUk?: string;
 }
 
 // Тип для товара
@@ -36,7 +40,6 @@ const getProducts = async (): Promise<Product[]> => {
   return response.data;
 };
 
-// ++ НОВАЯ ФУНКЦИЯ: Получение товаров по slug категории ++
 const getProductsByCategory = async (slug: string): Promise<Product[]> => {
   const response = await axios.get(`${API_URL}/products/category/${slug}`);
   return response.data;
@@ -49,16 +52,17 @@ const getCategories = async (): Promise<Category[]> => {
 };
 
 const createCategory = async (
-  name: string,
+  nameDe: string, // <-- Изменено для ясности
   slug: string
 ): Promise<Category> => {
-  // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
+  // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+  // Отправляем объект с полем nameDe вместо name
   const response = await axios.post(
     API_URL + "/admin/categories",
-    { name, slug },
+    { nameDe, slug }, 
     {
       headers: { Authorization: `Bearer ${token}` },
     }
@@ -78,7 +82,6 @@ const updateCategoryImage = async (
   id: number,
   imageUrl: string
 ): Promise<Category> => {
-  // Добавлен тип возвращаемого значения
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
@@ -124,7 +127,8 @@ export interface PaginatedResponse<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-  number: number; // номер текущей страницы
+  number: number;
+  size: number;
 }
 
 const getLatestProducts = async (

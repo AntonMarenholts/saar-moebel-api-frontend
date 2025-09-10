@@ -2,7 +2,6 @@ import axios from "axios";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-// Определяем структуру объекта новости
 export interface NewsArticle {
   id: number;
   titleDe: string;
@@ -16,12 +15,17 @@ export interface NewsArticle {
   titleUk?: string;
   contentUk?: string;
   imageUrl: string;
-  createdAt: string; // Даты обычно приходят как строки из API
+  createdAt: string;
 }
 
+export interface Page<T> {
+  content: T[];
+  totalPages: number;
+  number: number;
+}
 
-const getLatestNews = async (): Promise<NewsArticle[]> => {
-  const response = await axios.get(API_URL + "/news/latest");
+const getLatestNews = async (page: number, size: number): Promise<Page<NewsArticle>> => {
+  const response = await axios.get(`${API_URL}/news/latest?page=${page}&size=${size}`);
   return response.data;
 };
 
