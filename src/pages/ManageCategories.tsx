@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import type { Category } from "../services/product.service";
@@ -6,7 +6,7 @@ import ProductService from "../services/product.service";
 import { useForm, type SubmitHandler } from "react-hook-form";
 
 type FormInputs = {
-  name: string;
+  nameDe: string;
   slug: string;
 };
 
@@ -14,9 +14,11 @@ type FormInputs = {
 const CategoryListItem = ({
   category,
   onUpdate,
+  onDelete,
 }: {
   category: Category;
-  onUpdate: (updatedCategory: Category) => void; // <-- ИЗМЕНЕНИЕ: Теперь передаем обновленную категорию
+  onUpdate: (updatedCategory: Category) => void;
+  onDelete: (deletedCategory: Category) => void;
 }) => {
   const { t } = useTranslation();
   const [isUploading, setIsUploading] = useState(false);
@@ -35,11 +37,10 @@ const CategoryListItem = ({
       try {
         const uploadResponse = await ProductService.uploadImage(file);
         const imageUrl = uploadResponse.imageUrl;
-        // Обновляем картинку на сервере
         const updatedCategory = await ProductService.updateCategoryImage(category.id, imageUrl);
 
         setMessage(t("category_image_update_success"));
-        onUpdate(updatedCategory); // <-- ИЗМЕНЕНИЕ: Передаем обновленные данные родительскому компоненту
+        onUpdate(updatedCategory);
 
       } catch (error) {
         setMessage(t("category_image_update_error"));
@@ -51,11 +52,10 @@ const CategoryListItem = ({
     }
   };
   
-  // Функция удаления остается без изменений
     const handleDelete = () => {
-        if (window.confirm(`${t("confirm_delete_category")} "${category.name}"?`)) {
+        if (window.confirm(`${t("confirm_delete_category")} "${category.nameDe}"?`)) {
             ProductService.deleteCategory(category.id)
-                .then(() => onUpdate(category)) // Передаем категорию для удаления из списка
+                .then(() => onDelete(category))
                 .catch(() => {
                     setMessage(t("category_delete_error"));
                     setIsError(true);
@@ -71,7 +71,7 @@ const CategoryListItem = ({
           {category.imageUrl ? (
             <img
               src={category.imageUrl}
-              alt={category.name}
+              alt={category.nameDe}
               className="w-20 h-20 rounded-md object-cover bg-gray-200"
             />
           ) : (
@@ -81,9 +81,8 @@ const CategoryListItem = ({
               </svg>
             </div>
           )}
-          {/* ++ ИЗМЕНЕНИЕ: Добавили отображение имени и slug ++ */}
           <div className="flex-grow">
-            <p className="font-bold text-gray-800">{category.name}</p>
+            <p className="font-bold text-gray-800">{category.nameDe}</p>
             <p className="text-sm text-gray-500">/{category.slug}</p>
           </div>
         </div>
@@ -99,11 +98,11 @@ const CategoryListItem = ({
             />
           </label>
            <button
-                        onClick={handleDelete}
-                        className="px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
-                    >
-                        {t("delete")}
-                    </button>
+                onClick={handleDelete}
+                className="px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700"
+            >
+                {t("delete")}
+            </button>
         </div>
       </div>
       {isUploading && <p className="text-sm text-blue-600 mt-2">{t("product_image_uploading")}</p>}
@@ -118,7 +117,7 @@ const CategoryListItem = ({
 
 export default function ManageCategoriesPage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, reset } = useForm<FormInputs>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<FormInputs>();
     const [categories, setCategories] = useState<Category[]>([]);
     const [message, setMessage] = useState("");
     const [isError, setIsError] = useState(false);
@@ -134,24 +133,24 @@ export default function ManageCategoriesPage() {
 
     useEffect(() => {
         fetchCategories();
-    }, []);
+    }, [t]);
 
     const onSubmit: SubmitHandler<FormInputs> = (data) => {
         setMessage("");
         setIsError(false);
-        ProductService.createCategory(data.name, data.slug)
-            .then((newCategory) => { // <-- ИЗМЕНЕНИЕ: Получаем новую категорию
+        ProductService.createCategory(data.nameDe, data.slug)
+            .then((newCategory) => {
                 setMessage(t("category_create_success"));
                 reset();
-                setCategories(prev => [...prev, newCategory]); // <-- Добавляем в конец списка без перезагрузки
+                setCategories(prev => [...prev, newCategory]);
             })
-            .catch(() => {
-                setMessage(t("category_create_error"));
+            .catch((err) => {
+                const errorMessage = err.response?.data?.message || t("category_create_error");
+                setMessage(errorMessage);
                 setIsError(true);
             });
     };
 
-    // ++ НОВАЯ ФУНКЦИЯ: Обработчик для обновления и удаления категорий в списке ++
     const handleCategoryUpdate = (updatedCategory: Category) => {
         setCategories(prevCategories => 
             prevCategories.map(cat => 
@@ -178,9 +177,15 @@ export default function ManageCategoriesPage() {
 
             <div className="mb-8 p-4 bg-white rounded-lg shadow-md">
                 <h2 className="text-lg font-semibold mb-4">{t("category_add_new")}</h2>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
-                    <input {...register("name", { required: true })} placeholder={t("category_name")} className="p-2 border border-gray-300 rounded-md" />
-                    <input {...register("slug", { required: true })} placeholder={t("category_slug")} className="p-2 border border-gray-300 rounded-md" />
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-start">
+                    <div>
+                        <input {...register("nameDe", { required: t('field_is_required') })} placeholder={t("category_name")} className="p-2 border border-gray-300 rounded-md w-full" />
+                        {errors.nameDe && <p className="mt-1 text-sm text-red-600">{errors.nameDe.message}</p>}
+                    </div>
+                     <div>
+                        <input {...register("slug", { required: t('field_is_required') })} placeholder={t("category_slug")} className="p-2 border border-gray-300 rounded-md w-full" />
+                        {errors.slug && <p className="mt-1 text-sm text-red-600">{errors.slug.message}</p>}
+                    </div>
                     <button type="submit" className="px-4 py-2 font-bold text-white bg-brand-blue rounded-md hover:bg-blue-600">
                         {t("category_add_new")}
                     </button>
@@ -199,14 +204,8 @@ export default function ManageCategoriesPage() {
                         <CategoryListItem
                             key={cat.id}
                             category={cat}
-                            // -- ИЗМЕНЕНИЕ: Передаем новый обработчик --
-                            onUpdate={(updatedCategory) => {
-                                if (updatedCategory.id === cat.id) {
-                                    handleCategoryUpdate(updatedCategory);
-                                } else {
-                                    handleCategoryDelete(cat);
-                                }
-                            }}
+                            onUpdate={handleCategoryUpdate}
+                            onDelete={handleCategoryDelete}
                         />
                     ))}
                 </ul>

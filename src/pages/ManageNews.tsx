@@ -3,36 +3,52 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import AdminService, { type NewsArticle, type NewsArticleData } from '../services/admin.service';
-import ProductService from '../services/product.service'; // Используем для загрузки картинок
+import ProductService from '../services/product.service';
 
 type FormInputs = {
     titleDe: string;
     contentDe: string;
+    titleEn: string;
+    contentEn: string;
+    titleFr: string;
+    contentFr: string;
+    titleRu: string;
+    contentRu: string;
+    titleUk: string;
+    contentUk: string;
 };
+
+const NEWS_PER_PAGE = 6;
 
 export default function ManageNewsPage() {
     const { t } = useTranslation();
-    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<FormInputs>();
+    const { register, handleSubmit, reset, setValue, getValues, formState: { errors } } = useForm<FormInputs>();
 
     const [newsList, setNewsList] = useState<NewsArticle[]>([]);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+
     const [editingArticle, setEditingArticle] = useState<NewsArticle | null>(null);
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
-
-    // Состояния для загрузки файла
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
+    const [isTranslating, setIsTranslating] = useState(false);
+    const [isTranslated, setIsTranslated] = useState(false);
 
     const fetchNews = useCallback(() => {
-        AdminService.getNews()
-            .then(data => setNewsList(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())))
+        AdminService.getNews(currentPage, NEWS_PER_PAGE)
+            .then(data => {
+                setNewsList(data.content);
+                setTotalPages(data.totalPages);
+            })
             .catch(() => {
-                setMessage('Ошибка при загрузке новостей');
+                setMessage(t('news_load_error'));
                 setIsError(true);
             });
-    }, []);
+    }, [t, currentPage]);
 
     useEffect(() => {
         fetchNews();
@@ -55,10 +71,10 @@ export default function ManageNewsPage() {
         try {
             const response = await ProductService.uploadImage(selectedFile);
             setUploadedImageUrl(response.imageUrl);
-            setMessage("Изображение успешно загружено!");
+            setMessage(t('image_upload_success'));
             setIsError(false);
         } catch {
-            setMessage("Ошибка при загрузке изображения.");
+            setMessage(t('image_upload_error'));
             setIsError(true);
         } finally {
             setIsUploading(false);
@@ -69,21 +85,30 @@ export default function ManageNewsPage() {
         setEditingArticle(article);
         setValue('titleDe', article.titleDe);
         setValue('contentDe', article.contentDe);
+        setValue('titleEn', article.titleEn || '');
+        setValue('contentEn', article.contentEn || '');
+        setValue('titleFr', article.titleFr || '');
+        setValue('contentFr', article.contentFr || '');
+        setValue('titleRu', article.titleRu || '');
+        setValue('contentRu', article.contentRu || '');
+        setValue('titleUk', article.titleUk || '');
+        setValue('contentUk', article.contentUk || '');
         setUploadedImageUrl(article.imageUrl);
         setPreview(article.imageUrl);
+        setIsTranslated(true);
         window.scrollTo(0, 0);
     };
 
     const handleDelete = (id: number) => {
-        if (window.confirm("Вы уверены, что хотите удалить эту новость?")) {
+        if (window.confirm(t('news_delete_confirm'))) {
             AdminService.deleteNews(id)
                 .then(() => {
-                    setMessage("Новость успешно удалена.");
+                    setMessage(t('news_delete_success'));
                     setIsError(false);
                     fetchNews();
                 })
                 .catch(() => {
-                    setMessage("Ошибка при удалении новости.");
+                    setMessage(t('news_delete_error'));
                     setIsError(true);
                 });
         }
@@ -96,11 +121,54 @@ export default function ManageNewsPage() {
         setPreview(null);
         setUploadedImageUrl(null);
         setMessage('');
+        setIsTranslated(false);
     };
+    
+    const handleTranslate = async () => {
+        setIsTranslating(true);
+        setMessage('');
+        setIsError(false);
+        const titleDe = getValues("titleDe");
+        const contentDe = getValues("contentDe");
+
+        if (!titleDe || !contentDe) {
+            setMessage(t('news_add_error_german'));
+            setIsError(true);
+            setIsTranslating(false);
+            return;
+        }
+
+        try {
+            const translations = await AdminService.translateNewsContent(titleDe, contentDe);
+            setValue("titleEn", translations.titleEn);
+            setValue("contentEn", translations.contentEn);
+            setValue("titleFr", translations.titleFr);
+            setValue("contentFr", translations.contentFr);
+            setValue("titleRu", translations.titleRu);
+            setValue("contentRu", translations.contentRu);
+            setValue("titleUk", translations.titleUk);
+            setValue("contentUk", translations.contentUk);
+            setMessage(t('news_translate_success'));
+            setIsTranslated(true);
+        } catch (error) {
+            console.error("Translation error:", error);
+            setMessage(t('news_translate_error'));
+            setIsError(true);
+        } finally {
+            setIsTranslating(false);
+        }
+    };
+
 
     const onSubmit: SubmitHandler<FormInputs> = async (data) => {
         if (!uploadedImageUrl) {
-            setMessage("Пожалуйста, сначала загрузите изображение.");
+            setMessage(t('product_upload_first'));
+            setIsError(true);
+            return;
+        }
+
+        if (!isTranslated && !editingArticle) {
+            setMessage("Пожалуйста, сначала выполните перевод.");
             setIsError(true);
             return;
         }
@@ -110,16 +178,16 @@ export default function ManageNewsPage() {
         try {
             if (editingArticle) {
                 await AdminService.updateNews(editingArticle.id, newsData);
-                setMessage("Новость успешно обновлена!");
+                setMessage(t('news_update_success'));
             } else {
                 await AdminService.createNews(newsData);
-                setMessage("Новость успешно создана!");
+                setMessage(t('news_create_success'));
             }
             setIsError(false);
             clearForm();
             fetchNews();
         } catch {
-            setMessage(editingArticle ? "Ошибка при обновлении новости." : "Ошибка при создании новости.");
+            setMessage(t('news_update_error_generic'));
             setIsError(true);
         }
     };
@@ -134,45 +202,77 @@ export default function ManageNewsPage() {
             </div>
             
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-                <h2 className="text-lg font-semibold mb-4">
-                    {editingArticle ? 'Редактирование новости' : t('add_news_article')}
-                </h2>
-                
-                {/* Image Uploader */}
+                 <h2 className="text-lg font-semibold mb-4">
+                     {editingArticle ? t('news_edit') : t('add_news_article')}
+                 </h2>
                  <div className="space-y-2 mb-6">
                     <label className="block text-sm font-medium text-gray-700">{t('product_image_upload')}</label>
                     <div className="flex items-center gap-4">
                         <div className="w-32 h-32 border border-dashed rounded-md flex items-center justify-center bg-gray-50">
-                            {preview ? <img src={preview} alt="preview" className="w-full h-full object-cover rounded-md"/> : <span className="text-xs text-gray-500">Предпросмотр</span>}
+                            {preview ? <img src={preview} alt="preview" className="w-full h-full object-cover rounded-md"/> : <span className="text-xs text-gray-500">{t('preview')}</span>}
                         </div>
-                        <div className="flex-grow">
-                            <input type="file" onChange={handleFileChange} accept="image/*" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-brand-blue hover:file:bg-blue-100"/>
-                            <button type="button" onClick={handleImageUpload} disabled={!selectedFile || isUploading} className="mt-2 px-4 py-2 text-sm font-bold text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400">
-                                {isUploading ? t('product_image_uploading') : "Загрузить"}
+                        <div>
+                            <label className="cursor-pointer">
+                                <span className="inline-block text-sm font-semibold bg-blue-50 text-brand-blue hover:bg-blue-100 rounded-full py-2 px-4">
+                                    {t('choose_file')}
+                                </span>
+                                <input 
+                                    type="file" 
+                                    onChange={handleFileChange} 
+                                    accept="image/*" 
+                                    className="hidden"
+                                />
+                            </label>
+                            <span className="ml-3 text-sm text-gray-500">
+                                {selectedFile ? selectedFile.name : t('no_file_chosen')}
+                            </span>
+                            <button type="button" onClick={handleImageUpload} disabled={!selectedFile || isUploading} className="block mt-2 px-4 py-2 text-sm font-bold text-white bg-green-600 rounded-md hover:bg-green-700 disabled:bg-gray-400">
+                                {isUploading ? t('product_image_uploading') : t('upload')}
                             </button>
                         </div>
                     </div>
                 </div>
-
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                    <div>
-                        <label htmlFor="titleDe" className="block text-sm font-medium text-gray-700">{t('news_title_de')}</label>
-                        <input id="titleDe" {...register("titleDe", { required: "Заголовок обязателен" })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" />
-                        {errors.titleDe && <p className="text-sm text-red-500 mt-1">{errors.titleDe.message}</p>}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 divide-y divide-gray-200">
+                    <div className="pt-4">
+                        <div className="flex justify-between items-center mb-2">
+                             <h3 className="text-md font-semibold text-gray-700">Deutsch (Original)</h3>
+                             <button 
+                                type="button" 
+                                onClick={handleTranslate} 
+                                disabled={isTranslating}
+                                className="px-4 py-1 text-sm font-bold text-white bg-purple-600 rounded-md hover:bg-purple-700 disabled:bg-gray-400"
+                             >
+                                {isTranslating ? t('news_translating') : t('translate')}
+                             </button>
+                        </div>
+                        <div>
+                            <label htmlFor="titleDe" className="block text-sm font-medium text-gray-700">{t('news_title_de')}</label>
+                            <input id="titleDe" {...register("titleDe", { required: t('field_is_required') })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" />
+                            {errors.titleDe && <p className="mt-1 text-sm text-red-600">{errors.titleDe.message}</p>}
+                        </div>
+                        <div>
+                            <label htmlFor="contentDe" className="block text-sm font-medium text-gray-700">{t('news_content_de')}</label>
+                            <textarea id="contentDe" {...register("contentDe", { required: t('field_is_required') })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" rows={5}></textarea>
+                            {errors.contentDe && <p className="mt-1 text-sm text-red-600">{errors.contentDe.message}</p>}
+                        </div>
                     </div>
-                    <div>
-                        <label htmlFor="contentDe" className="block text-sm font-medium text-gray-700">{t('news_content_de')}</label>
-                        <textarea id="contentDe" {...register("contentDe", { required: "Содержимое обязательно" })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" rows={5}></textarea>
-                        {errors.contentDe && <p className="text-sm text-red-500 mt-1">{errors.contentDe.message}</p>}
+                    <div className="hidden">
+                        <input {...register("titleEn")} />
+                        <textarea {...register("contentEn")} />
+                        <input {...register("titleFr")} />
+                        <textarea {...register("contentFr")} />
+                        <input {...register("titleRu")} />
+                        <textarea {...register("contentRu")} />
+                        <input {...register("titleUk")} />
+                        <textarea {...register("contentUk")} />
                     </div>
-
-                    <div className="flex items-center gap-4">
-                        <button type="submit" className="px-4 py-2 font-bold text-white bg-brand-blue rounded-md hover:bg-blue-600">
-                            {editingArticle ? 'Обновить новость' : t('save_news')}
+                    <div className="flex items-center gap-4 pt-4">
+                        <button type="submit" disabled={!isTranslated && !editingArticle} className="px-4 py-2 font-bold text-white bg-brand-blue rounded-md hover:bg-blue-600 disabled:bg-gray-400">
+                            {editingArticle ? t('news_edit_button') : t('save_news')}
                         </button>
                         {editingArticle && (
                             <button type="button" onClick={clearForm} className="px-4 py-2 font-bold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">
-                                Отмена
+                                {t('cancel')}
                             </button>
                         )}
                     </div>
@@ -183,7 +283,7 @@ export default function ManageNewsPage() {
                     </div>
                 )}
             </div>
-
+            
             <div className="mt-8">
                 <h2 className="text-lg font-semibold mb-4">{t('existing_news')}</h2>
                 <div className="space-y-4">
@@ -196,14 +296,36 @@ export default function ManageNewsPage() {
                                 <p className="text-xs text-gray-400 mt-1">{new Date(article.createdAt).toLocaleDateString()}</p>
                             </div>
                             <div className="flex flex-col gap-2 flex-shrink-0">
-                                <button onClick={() => handleEdit(article)} className="px-3 py-1 text-sm text-white bg-yellow-500 rounded-md hover:bg-yellow-600">Редактировать</button>
-                                <button onClick={() => handleDelete(article.id)} className="px-3 py-1 text-sm text-white bg-red-600 rounded-md hover:bg-red-700">Удалить</button>
+                                <button onClick={() => handleEdit(article)} className="px-3 py-1 text-sm text-white bg-yellow-500 rounded-md hover:bg-yellow-600">{t('news_edit_button')}</button>
+                                <button onClick={() => handleDelete(article.id)} className="px-3 py-1 text-sm text-white bg-red-600 rounded-md hover:bg-red-700">{t('delete')}</button>
                             </div>
                         </div>
                     )) : (
                         <p className="text-gray-500">{t('no_news_yet')}</p>
                     )}
                 </div>
+
+                {totalPages > 1 && (
+                    <div className="flex justify-center items-center gap-4 mt-8">
+                        <button
+                            onClick={() => setCurrentPage(prev => prev - 1)}
+                            disabled={currentPage === 0}
+                            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+                        >
+                            {t('previous_page')}
+                        </button>
+                        <span className="text-sm font-medium text-gray-700">
+                            {t('page')} {currentPage + 1} / {totalPages}
+                        </span>
+                        <button
+                            onClick={() => setCurrentPage(prev => prev + 1)}
+                            disabled={currentPage + 1 >= totalPages}
+                            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+                        >
+                            {t('next_page')}
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

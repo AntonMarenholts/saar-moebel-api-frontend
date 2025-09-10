@@ -94,7 +94,29 @@
   "news_title_de": "Заголовок (DE)",
   "news_content_de": "Содержимое (DE)",
   "admin_go_to_site": "Перейти на сайт",
-  "latest_news": "Новинки поступления"
-
-
+  "latest_news": "Новинки поступления",
+  "news_edit": "Редактирование новости",
+  "news_add_error_german": "Сначала заполните заголовок и контент на немецком языке.",
+  "news_translate_error": "Ошибка при переводе.",
+  "news_translate_success": "Перевод выполнен.",
+  "news_translating": "Переводим...",
+  "translate": "Перевести",
+  "news_edit_button": "Редактировать",
+  "news_delete_confirm": "Вы уверены, что хотите удалить эту новость?",
+  "news_delete_success": "Новость успешно удалена.",
+  "news_delete_error": "Ошибка при удалении новости.",
+  "news_update_success": "Новость успешно обновлена!",
+  "news_create_success": "Новость успешно создана!",
+  "news_update_error_generic": "сообщение об ошибке при обновлении/создании",
+  "upload": "Загрузить",
+  "preview": "Предпросмотр",
+  "cancel": "Отмена",
+  "image_upload_success": "Изображение успешно загружено!",
+  "image_upload_error": "Ошибка при загрузке изображения.",
+  "news_load_error": "Ошибка при загрузке новостей",
+  "choose_file": "Выберите файл",
+  "no_file_chosen": "Файл не выбран",
+  "page": "Страница",
+  "previous_page": "Назад",
+  "next_page": "Вперед"
 }
