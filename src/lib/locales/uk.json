@@ -137,5 +137,17 @@
   "promotion_delete_error": "Помилка при видаленні акції.",
   "promotion_load_error": "Помилка при завантаженні акцій.",
   "promotion_status_active": "Активна до",
-  "promotion_status_expired": "Завершено"
+  "promotion_status_expired": "Завершено",
+  "promotion_load_error": "Помилка при завантаженні акцій.",
+  "promotion_status_active": "Активна до",
+  "promotion_status_expired": "Завершено",
+  "promotion_old_price": "Стара ціна",
+  "promotion_current_price": "Акційна ціна",
+  "you_save": "Ви заощаджуєте",
+  "offer_ends_in": "Пропозиція закінчується через",
+  "days": "днів",
+  "hours": "годинник",
+  "minutes": "хвилин",
+  "seconds": "секунд",
+  "back_to_promotions": "Назад до акцій"
 }

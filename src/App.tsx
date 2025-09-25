@@ -16,6 +16,8 @@ import ManageNewsPage from "./pages/ManageNews";
 import CategoryPage from "./pages/CategoryPage";
 import PromotionsPage from "./pages/PromotionsPage";
 import ManagePromotionsPage from "./pages/ManagePromotions";
+import PromotionDetailPage from "./pages/PromotionDetailPage";
+
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
+        <Route path="/promotion/:id" element={<PromotionDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -40,7 +43,7 @@ function App() {
           <Route path="/admin/promotions" element={<ManagePromotionsPage />} />
         </Route>
 
-        {/* --- Страница не найдена --- */}
+        
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

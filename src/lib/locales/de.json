@@ -137,5 +137,17 @@
   "promotion_delete_error": "Fehler beim Löschen Aktion.",
   "promotion_load_error": "Fehler beim Laden der Aktion.",
   "promotion_status_active": "Aktiv bis",
-  "promotion_status_expired": "Abgelaufen"
+  "promotion_status_expired": "Abgelaufen",
+  "promotion_load_error": "Fehler beim Laden der Aktion.",
+  "promotion_status_active": "Aktiv bis",
+  "promotion_status_expired": "Abgelaufen",
+  "promotion_old_price": "Alter Preis",
+  "promotion_current_price": "Aktionspreis",
+  "you_save": "Sie sparen",
+  "offer_ends_in": "Angebot endet in",
+  "days": "Tage",
+  "hours": "Stunden",
+  "minutes": "Minuten",
+  "seconds": "Sekunden",
+  "back_to_promotions": "Zurück zu den Aktionen"
 }

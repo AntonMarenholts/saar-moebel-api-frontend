@@ -137,5 +137,17 @@
   "promotion_delete_error": "Ошибка при удалении акции.",
   "promotion_load_error": "Ошибка при загрузке акций.",
   "promotion_status_active": "Активна до",
-  "promotion_status_expired": "Завершена"
+  "promotion_status_expired": "Завершена",
+  "promotion_load_error": "Ошибка при загрузке акций.",
+  "promotion_status_active": "Активна до",
+  "promotion_status_expired": "Завершена",
+  "promotion_old_price": "Старая цена",
+  "promotion_current_price": "Цена по акции",
+  "you_save": "Вы экономите",
+  "offer_ends_in": "Предложение заканчивается через",
+  "days": "дней",
+  "hours": "часов",
+  "minutes": "минут",
+  "seconds": "секунд",
+  "back_to_promotions": "Назад к акциям"
 }

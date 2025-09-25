@@ -1,12 +1,9 @@
-// src/services/admin.service.ts
-
 import axios from "axios";
 import AuthService from "./auth.service";
 import type { Promotion } from "./promotion.service";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-// ... интерфейс NewsArticle ...
 export interface NewsArticle {
   id: number;
   titleDe: string;
@@ -26,12 +23,13 @@ export interface PromotionData {
   nameDe: string;
   descriptionDe: string;
   price: number;
+  oldPrice?: number; // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
   size?: string;
   imageUrl: string;
   startDate: string;
   endDate: string;
 }
-// Интерфейс для создания/обновления (отправляем все поля)
+
 export interface NewsArticleData {
   titleDe: string;
   contentDe: string;
@@ -46,7 +44,7 @@ export interface NewsArticleData {
   contentUk: string;
 }
 
-// --- НОВЫЙ ИНТЕРФЕЙС ДЛЯ ОТВЕТА ОТ ПЕРЕВОДЧИКА ---
+
 export interface NewsTranslationResponse {
   titleEn: string;
   contentEn: string;
@@ -61,7 +59,7 @@ export interface Page<T> {
   content: T[];
   totalPages: number;
   totalElements: number;
-  number: number; // номер текущей страницы
+  number: number; 
   size: number;
 }
 
@@ -104,7 +102,7 @@ const deleteNews = async (id: number): Promise<void> => {
   });
 };
 
-// --- НОВАЯ ФУНКЦИЯ ПЕРЕВОДА ---
+
 const translateNewsContent = async (
   titleDe: string,
   contentDe: string
@@ -117,16 +115,28 @@ const translateNewsContent = async (
   return response.data;
 };
 
-const getPromotions = async (
+const getActivePromotions = async (
   page: number,
   size: number
 ): Promise<Page<Promotion>> => {
   const response = await axios.get(
-    `${API_URL}/admin/promotions?page=${page}&size=${size}`,
+    `${API_URL}/admin/promotions/active?page=${page}&size=${size}`,
     { headers: getAuthHeaders() }
   );
   return response.data;
 };
+
+const getArchivedPromotions = async (
+  page: number,
+  size: number
+): Promise<Page<Promotion>> => {
+  const response = await axios.get(
+    `${API_URL}/admin/promotions/archive?page=${page}&size=${size}`,
+    { headers: getAuthHeaders() }
+  );
+  return response.data;
+};
+
 
 const createPromotion = async (data: PromotionData): Promise<Promotion> => {
   const response = await axios.post(`${API_URL}/admin/promotions`, data, {
@@ -157,7 +167,8 @@ const AdminService = {
   updateNews,
   deleteNews,
   translateNewsContent,
-  getPromotions,
+  getActivePromotions,
+  getArchivedPromotions,
   createPromotion,
   updatePromotion,
   deletePromotion,

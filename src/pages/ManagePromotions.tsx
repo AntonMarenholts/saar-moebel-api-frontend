@@ -10,12 +10,60 @@ type FormInputs = {
     nameDe: string;
     descriptionDe: string;
     price: number;
+    oldPrice?: number; // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
     size: string;
     startDate: string;
     endDate: string;
 };
 
-const PROMOTIONS_PER_PAGE = 8; // 4 в ряд, 2 ряда = 8
+const PROMOTIONS_PER_PAGE = 8;
+
+// --- НОВЫЙ КОМПОНЕНТ ПАГИНАЦИИ ---
+const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) => {
+    const { t } = useTranslation();
+    const pageNumbers = [];
+
+    // Logic to create page numbers with ellipsis
+    if (totalPages <= 7) {
+        for (let i = 0; i < totalPages; i++) {
+            pageNumbers.push(i);
+        }
+    } else {
+        pageNumbers.push(0);
+        if (currentPage > 2) {
+            pageNumbers.push('...');
+        }
+        for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages - 2); i++) {
+            pageNumbers.push(i);
+        }
+        if (currentPage < totalPages - 3) {
+            pageNumbers.push('...');
+        }
+        pageNumbers.push(totalPages - 1);
+    }
+    
+
+    return (
+         <div className="flex justify-center items-center gap-2 mt-8">
+            <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0} className="px-3 py-1 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
+                {t('previous_page')}
+            </button>
+            {pageNumbers.map((num, index) => 
+                typeof num === 'number' ? (
+                    <button key={index} onClick={() => onPageChange(num)} className={`px-3 py-1 text-sm rounded-md ${currentPage === num ? 'bg-brand-blue text-white' : 'bg-gray-200'}`}>
+                        {num + 1}
+                    </button>
+                ) : (
+                    <span key={index} className="px-3 py-1">...</span>
+                )
+            )}
+            <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages} className="px-3 py-1 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
+                {t('next_page')}
+            </button>
+        </div>
+    );
+};
+
 
 export default function ManagePromotionsPage() {
     const { t } = useTranslation();
@@ -25,6 +73,7 @@ export default function ManagePromotionsPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null);
+    const [view, setView] = useState<'active' | 'archive'>('active'); // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
     
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
@@ -35,7 +84,8 @@ export default function ManagePromotionsPage() {
     const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
 
     const fetchPromotions = useCallback(() => {
-        AdminService.getPromotions(currentPage, PROMOTIONS_PER_PAGE)
+        const fetcher = view === 'active' ? AdminService.getActivePromotions : AdminService.getArchivedPromotions;
+        fetcher(currentPage, PROMOTIONS_PER_PAGE)
             .then(data => {
                 setPromotions(data.content);
                 setTotalPages(data.totalPages);
@@ -44,7 +94,7 @@ export default function ManagePromotionsPage() {
                 setMessage(t('promotion_load_error'));
                 setIsError(true);
             });
-    }, [currentPage, t]);
+    }, [currentPage, t, view]);
 
     useEffect(() => {
         fetchPromotions();
@@ -54,7 +104,7 @@ export default function ManagePromotionsPage() {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setSelectedFile(file);
-            setUploadedImageUrl(null); // Сбрасываем URL при выборе нового файла
+            setUploadedImageUrl(null); 
             const reader = new FileReader();
             reader.onloadend = () => setPreview(reader.result as string);
             reader.readAsDataURL(file);
@@ -82,6 +132,7 @@ export default function ManagePromotionsPage() {
         setValue('nameDe', promo.nameDe);
         setValue('descriptionDe', promo.descriptionDe);
         setValue('price', promo.price);
+        setValue('oldPrice', promo.oldPrice); // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
         setValue('size', promo.size || '');
         setValue('startDate', promo.startDate);
         setValue('endDate', promo.endDate);
@@ -95,7 +146,7 @@ export default function ManagePromotionsPage() {
             AdminService.deletePromotion(id)
                 .then(() => {
                     setMessage(t('promotion_delete_success'));
-                    fetchPromotions(); // Обновляем список после удаления
+                    fetchPromotions(); 
                 })
                 .catch(() => {
                     setMessage(t('promotion_delete_error'));
@@ -124,6 +175,7 @@ export default function ManagePromotionsPage() {
         const promotionData: PromotionData = {
             ...data,
             price: Number(data.price),
+            oldPrice: data.oldPrice ? Number(data.oldPrice) : undefined, // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
             imageUrl: uploadedImageUrl
         };
 
@@ -155,7 +207,6 @@ export default function ManagePromotionsPage() {
                 <h2 className="text-lg font-semibold mb-4">{editingPromotion ? t('edit_promotion') : t('add_promotion')}</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Левая колонка: тексты и цены */}
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="nameDe" className="block text-sm font-medium text-gray-700">{t('promotion_name')} (DE)</label>
@@ -168,6 +219,10 @@ export default function ManagePromotionsPage() {
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
+                                    <label htmlFor="oldPrice" className="block text-sm font-medium text-gray-700">{t('promotion_old_price')} (€)</label>
+                                    <input id="oldPrice" type="number" step="0.01" {...register("oldPrice", { valueAsNumber: true, min: 0 })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" />
+                                </div>
+                                <div>
                                     <label htmlFor="price" className="block text-sm font-medium text-gray-700">{t('promotion_price')} (€)</label>
                                     <input id="price" type="number" step="0.01" {...register("price", { required: t('field_is_required'), valueAsNumber: true, min: 0 })} className="mt-1 w-full p-2 border border-gray-300 rounded-md" />
                                     {errors.price && <p className="text-sm text-red-500 mt-1">{errors.price.message}</p>}
@@ -178,7 +233,6 @@ export default function ManagePromotionsPage() {
                                 </div>
                             </div>
                         </div>
-                        {/* Правая колонка: картинка и даты */}
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">{t('product_image_upload')}</label>
@@ -232,12 +286,17 @@ export default function ManagePromotionsPage() {
             </div>
 
             <div className="mt-8">
+                <div className="flex border-b mb-4">
+                    <button onClick={() => setView('active')} className={`py-2 px-4 ${view === 'active' ? 'border-b-2 border-brand-blue text-brand-blue' : 'text-gray-500'}`}>Активные</button>
+                    <button onClick={() => setView('archive')} className={`py-2 px-4 ${view === 'archive' ? 'border-b-2 border-brand-blue text-brand-blue' : 'text-gray-500'}`}>Архив</button>
+                </div>
+
                 <h2 className="text-lg font-semibold mb-4">{t('existing_promotions')}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {promotions.map(promo => {
                         const isExpired = new Date(promo.endDate) < new Date();
                         return (
-                            <div key={promo.id} className={`rounded-lg shadow-sm overflow-hidden ${isExpired ? 'bg-gray-100' : 'bg-white'}`}>
+                            <div key={promo.id} className={`rounded-lg shadow-sm overflow-hidden ${isExpired ? 'bg-gray-100 opacity-75' : 'bg-white'}`}>
                                 <img src={promo.imageUrl} alt={promo.nameDe} className="w-full h-40 object-cover"/>
                                 <div className="p-4">
                                     <h3 className="font-bold">{promo.nameDe}</h3>
@@ -256,17 +315,7 @@ export default function ManagePromotionsPage() {
                     })}
                 </div>
 
-                {totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-4 mt-8">
-                        <button onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 0} className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
-                            {t('previous_page')}
-                        </button>
-                        <span>{t('page')} {currentPage + 1} / {totalPages}</span>
-                        <button onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage + 1 >= totalPages} className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
-                            {t('next_page')}
-                        </button>
-                    </div>
-                )}
+                {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />}
             </div>
         </div>
     );

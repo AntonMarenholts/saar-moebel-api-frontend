@@ -1,9 +1,8 @@
 import axios from "axios";
-import type { Page } from "./admin.service"; // Используем существующий тип Page
+import type { Page } from "./admin.service";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-// Интерфейс для акционного товара
 export interface Promotion {
   id: number;
   nameDe: string;
@@ -17,9 +16,10 @@ export interface Promotion {
   descriptionRu?: string;
   descriptionUk?: string;
   price: number;
+  oldPrice?: number;
   size?: string;
   imageUrl: string;
-  startDate: string; // Даты приходят как строки
+  startDate: string;
   endDate: string;
   createdAt: string;
 }
@@ -29,8 +29,16 @@ const getActivePromotions = async (page: number, size: number): Promise<Page<Pro
   return response.data;
 };
 
+// --- НОВАЯ ФУНКЦИЯ ---
+const getPromotionById = async (id: number): Promise<Promotion> => {
+  const response = await axios.get(`${API_URL}/promotions/${id}`);
+  return response.data;
+};
+
+
 const PromotionService = {
   getActivePromotions,
+  getPromotionById, // --- ЭКСПОРТ НОВОЙ ФУНКЦИИ ---
 };
 
 export default PromotionService;

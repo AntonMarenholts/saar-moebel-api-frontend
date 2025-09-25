@@ -137,5 +137,17 @@
   "promotion_delete_error": "Error deleting promotion.",
   "promotion_load_error": "Error loading promotions.",
   "promotion_status_active": "Active until",
-  "promotion_status_expired": "Expired"
+  "promotion_status_expired": "Expired",
+  "promotion_load_error": "Error loading promotions.",
+  "promotion_status_active": "Active until",
+  "promotion_status_expired": "Expired",
+  "promotion_old_price": "Old Price",
+  "promotion_current_price": "Current Price",
+  "you_save": "You save",
+  "offer_ends_in": "Offer ends in",
+  "days": "days",
+  "hours": "hours",
+  "minutes": "minutes",
+  "seconds": "seconds",
+  "back_to_promotions": "Back to promotions"
 }

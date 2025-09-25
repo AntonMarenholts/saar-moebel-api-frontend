@@ -3,9 +3,56 @@ import { useTranslation } from "react-i18next";
 import PromotionService, {
   type Promotion,
 } from "../services/promotion.service";
+import { Link } from "react-router-dom";
+
+
+const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) => {
+    const { t } = useTranslation();
+    const pageNumbers = [];
+
+    if (totalPages <= 7) {
+        for (let i = 0; i < totalPages; i++) {
+            pageNumbers.push(i);
+        }
+    } else {
+        pageNumbers.push(0);
+        if (currentPage > 2) {
+            pageNumbers.push('...');
+        }
+        for (let i = Math.max(1, currentPage - 1); i <= Math.min(currentPage + 1, totalPages - 2); i++) {
+            pageNumbers.push(i);
+        }
+        if (currentPage < totalPages - 3) {
+            pageNumbers.push('...');
+        }
+        pageNumbers.push(totalPages - 1);
+    }
+    
+
+    return (
+         <div className="flex justify-center items-center gap-2 mt-8">
+            <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0} className="px-3 py-1 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
+                {t('previous_page')}
+            </button>
+            {pageNumbers.map((num, index) => 
+                typeof num === 'number' ? (
+                    <button key={index} onClick={() => onPageChange(num)} className={`px-3 py-1 text-sm rounded-md ${currentPage === num ? 'bg-brand-blue text-white' : 'bg-gray-200'}`}>
+                        {num + 1}
+                    </button>
+                ) : (
+                    <span key={index} className="px-3 py-1">...</span>
+                )
+            )}
+            <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage + 1 >= totalPages} className="px-3 py-1 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
+                {t('next_page')}
+            </button>
+        </div>
+    );
+};
+
 
 const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
 
   const getTranslated = (item: Promotion, field: "name" | "description") => {
     const lang = i18n.language;
@@ -24,7 +71,7 @@ const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
           return item.nameDe;
       }
     } else {
-      // field === 'description'
+      
       switch (lang) {
         case "en":
           return item.descriptionEn || item.descriptionDe;
@@ -41,7 +88,7 @@ const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
   };
 
   return (
-    <div className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-transform duration-300 hover:-translate-y-1">
+    <Link to={`/promotion/${promotion.id}`} className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-transform duration-300 hover:-translate-y-1 block">
       <div className="aspect-square overflow-hidden">
         <img
           src={promotion.imageUrl}
@@ -56,14 +103,21 @@ const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
         <p className="text-sm text-gray-600 mt-1 line-clamp-2">
           {getTranslated(promotion, "description")}
         </p>
-        <p className="mt-2 text-xl font-bold text-brand-blue">
-          {promotion.price} €
-        </p>
+        <div className="mt-2">
+            {promotion.oldPrice && (
+                 <p className="text-sm text-red-500 line-through">
+                    {t('promotion_old_price')}: {promotion.oldPrice} €
+                 </p>
+            )}
+            <p className="text-xl font-bold text-brand-blue">
+                 {t('promotion_current_price')}: {promotion.price} €
+            </p>
+        </div>
         {promotion.size && (
           <p className="text-xs text-gray-500 mt-1">Size: {promotion.size}</p>
         )}
       </div>
-    </div>
+    </Link>
   );
 };
 
@@ -102,27 +156,7 @@ export default function PromotionsPage() {
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-4 mt-8">
-          <button
-            onClick={() => setCurrentPage((p) => p - 1)}
-            disabled={currentPage === 0}
-            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
-          >
-            {t("previous_page")}
-          </button>
-          <span className="text-sm font-medium text-gray-700">
-            {t("page")} {currentPage + 1} / {totalPages}
-          </span>
-          <button
-            onClick={() => setCurrentPage((p) => p + 1)}
-            disabled={currentPage + 1 >= totalPages}
-            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
-          >
-            {t("next_page")}
-          </button>
-        </div>
-      )}
+      {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />}
     </div>
   );
 }
