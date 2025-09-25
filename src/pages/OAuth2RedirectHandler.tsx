@@ -2,20 +2,19 @@ import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
-import { useTranslation } from 'react-i18next'; // <-- Добавляем импорт
+import { useTranslation } from 'react-i18next';
 import type { AuthUser } from '../services/auth.service';
 
 const OAuth2RedirectHandler = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const { t } = useTranslation(); // <-- Инициализируем функцию перевода
+    const { t } = useTranslation();
 
     useEffect(() => {
         const token = searchParams.get('token');
 
         if (token) {
             try {
-                // ... (логика декодирования токена остается без изменений)
                 const decodedToken: { sub: string, roles: string[], email: string, id: number } = jwtDecode(token);
                 
                 const user: AuthUser = {
@@ -31,8 +30,11 @@ const OAuth2RedirectHandler = () => {
                 if (user.roles.includes('ROLE_ADMIN')) {
                     navigate('/admin/dashboard');
                 } else {
-                    navigate('/profile');
+                    navigate('/'); 
                 }
+                
+                
+                window.location.reload();
                 
             } catch (error) {
                 console.error("Ошибка при обработке токена", error);

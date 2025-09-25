@@ -149,5 +149,9 @@
   "hours": "Stunden",
   "minutes": "Minuten",
   "seconds": "Sekunden",
-  "back_to_promotions": "Zurück zu den Aktionen"
+  "back_to_promotions": "Zurück zu den Aktionen",
+  "cart_title": "Mein Warenkorb",
+  "cart_empty": "Ihr Warenkorb ist derzeit leer.",
+  "back_to_shopping": "Zurück zum Warenkorb",
+  "back_to_panel": "Zurück zum Panel"
 }

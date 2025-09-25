@@ -10,7 +10,7 @@ type FormInputs = {
     nameDe: string;
     descriptionDe: string;
     price: number;
-    oldPrice?: number; // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+    oldPrice?: number;
     size: string;
     startDate: string;
     endDate: string;
@@ -18,12 +18,10 @@ type FormInputs = {
 
 const PROMOTIONS_PER_PAGE = 8;
 
-// --- НОВЫЙ КОМПОНЕНТ ПАГИНАЦИИ ---
 const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) => {
     const { t } = useTranslation();
     const pageNumbers = [];
 
-    // Logic to create page numbers with ellipsis
     if (totalPages <= 7) {
         for (let i = 0; i < totalPages; i++) {
             pageNumbers.push(i);
@@ -73,7 +71,7 @@ export default function ManagePromotionsPage() {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [editingPromotion, setEditingPromotion] = useState<Promotion | null>(null);
-    const [view, setView] = useState<'active' | 'archive'>('active'); // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+    const [view, setView] = useState<'active' | 'archive'>('active');
     
     const [message, setMessage] = useState('');
     const [isError, setIsError] = useState(false);
@@ -104,7 +102,7 @@ export default function ManagePromotionsPage() {
         if (event.target.files && event.target.files[0]) {
             const file = event.target.files[0];
             setSelectedFile(file);
-            setUploadedImageUrl(null); 
+            setUploadedImageUrl(null);
             const reader = new FileReader();
             reader.onloadend = () => setPreview(reader.result as string);
             reader.readAsDataURL(file);
@@ -132,7 +130,7 @@ export default function ManagePromotionsPage() {
         setValue('nameDe', promo.nameDe);
         setValue('descriptionDe', promo.descriptionDe);
         setValue('price', promo.price);
-        setValue('oldPrice', promo.oldPrice); // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+        setValue('oldPrice', promo.oldPrice);
         setValue('size', promo.size || '');
         setValue('startDate', promo.startDate);
         setValue('endDate', promo.endDate);
@@ -146,7 +144,7 @@ export default function ManagePromotionsPage() {
             AdminService.deletePromotion(id)
                 .then(() => {
                     setMessage(t('promotion_delete_success'));
-                    fetchPromotions(); 
+                    fetchPromotions();
                 })
                 .catch(() => {
                     setMessage(t('promotion_delete_error'));
@@ -175,7 +173,7 @@ export default function ManagePromotionsPage() {
         const promotionData: PromotionData = {
             ...data,
             price: Number(data.price),
-            oldPrice: data.oldPrice ? Number(data.oldPrice) : undefined, // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+            oldPrice: data.oldPrice ? Number(data.oldPrice) : undefined,
             imageUrl: uploadedImageUrl
         };
 
@@ -199,7 +197,7 @@ export default function ManagePromotionsPage() {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">{t('admin_manage_promotions')}</h1>
                 <Link to="/admin/dashboard" className="text-sm text-brand-blue hover:underline">
-                    ← {t('back_to_dashboard')}
+                    {t('back_to_dashboard')}
                 </Link>
             </div>
 
@@ -207,6 +205,7 @@ export default function ManagePromotionsPage() {
                 <h2 className="text-lg font-semibold mb-4">{editingPromotion ? t('edit_promotion') : t('add_promotion')}</h2>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Левая колонка: тексты и цены */}
                         <div className="space-y-4">
                             <div>
                                 <label htmlFor="nameDe" className="block text-sm font-medium text-gray-700">{t('promotion_name')} (DE)</label>
@@ -233,6 +232,7 @@ export default function ManagePromotionsPage() {
                                 </div>
                             </div>
                         </div>
+                        {/* Правая колонка: картинка и даты */}
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">{t('product_image_upload')}</label>

@@ -1,9 +1,9 @@
 
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next'; // <-- Добавляем импорт
+import { useTranslation } from 'react-i18next'; 
 
 export default function NotFoundPage() {
-    const { t } = useTranslation(); // <-- Инициализируем функцию перевода
+    const { t } = useTranslation(); 
 
     return (
         <div className="flex flex-col items-center justify-center text-center h-full">

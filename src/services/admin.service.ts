@@ -23,7 +23,7 @@ export interface PromotionData {
   nameDe: string;
   descriptionDe: string;
   price: number;
-  oldPrice?: number; // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
+  oldPrice?: number; 
   size?: string;
   imageUrl: string;
   startDate: string;

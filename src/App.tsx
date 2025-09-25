@@ -17,7 +17,8 @@ import CategoryPage from "./pages/CategoryPage";
 import PromotionsPage from "./pages/PromotionsPage";
 import ManagePromotionsPage from "./pages/ManagePromotions";
 import PromotionDetailPage from "./pages/PromotionDetailPage";
-
+import CartPage from "./pages/CartPage"; 
+import UserRoute from "./components/auth/UserRoute"; 
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
 
       <Route element={<MainLayout />}>
+        
         <Route path="/" element={<HomePage />} />
         <Route path="/promotions" element={<PromotionsPage />} />
         <Route path="/promotion/:id" element={<PromotionDetailPage />} />
@@ -33,8 +35,14 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/category/:slug" element={<CategoryPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
 
+        
+        <Route element={<UserRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/cart" element={<CartPage />} />
+        </Route>
+
+        
         <Route element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
           <Route path="/admin/add-product" element={<AddProductPage />} />
@@ -43,7 +51,6 @@ function App() {
           <Route path="/admin/promotions" element={<ManagePromotionsPage />} />
         </Route>
 
-        
         <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>

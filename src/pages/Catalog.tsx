@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 
-import { useTranslation } from 'react-i18next'; // <-- Импортируем для локализации
+import { useTranslation } from 'react-i18next'; 
 import type { Product } from '../services/product.service';
 import ProductService from '../services/product.service';
 
-// Компонент карточки товара остаётся почти таким же, но теперь использует тип Product
+
 const ProductCard = ({ product }: { product: Product }) => {
-  const { t } = useTranslation(); // <-- Для кнопки "В корзину"
+  const { t } = useTranslation(); 
 
   return (
     <div className="group relative bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-transform duration-300 hover:-translate-y-1">
@@ -19,7 +19,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           />
         ) : (
           <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-            {/* Иконка-заглушка */}
+            
             <svg
               className="w-12 h-12 text-gray-400"
               xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       </div>
       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-opacity duration-300 flex items-center justify-center">
         <button className="px-6 py-2 text-white bg-brand-blue rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          {t('add_to_cart')} {/* Используем перевод */}
+          {t('add_to_cart')} 
         </button>
       </div>
     </div>

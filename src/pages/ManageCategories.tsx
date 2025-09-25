@@ -10,7 +10,7 @@ type FormInputs = {
   slug: string;
 };
 
-// Компонент для управления одной категорией в списке
+
 const CategoryListItem = ({
   category,
   onUpdate,

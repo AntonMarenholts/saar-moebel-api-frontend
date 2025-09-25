@@ -22,7 +22,7 @@ export default function Footer() {
                     <h3 className="text-xl font-bold text-white mb-4">Links</h3>
                     <ul>
                         <li><Link to="/rules" className="hover:text-white">{t('footer_rules')}</Link></li>
-                        {/* Другие ссылки */}
+                        
                     </ul>
                 </div>
                 <div>

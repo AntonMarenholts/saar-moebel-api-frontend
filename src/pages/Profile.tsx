@@ -1,9 +1,9 @@
 
 import AuthService from '../services/auth.service';
-import { useTranslation } from 'react-i18next'; // <-- Добавляем импорт
+import { useTranslation } from 'react-i18next'; 
 
 export default function ProfilePage() {
-    const { t } = useTranslation(); // <-- Инициализируем функцию перевода
+    const { t } = useTranslation(); 
     const currentUser = AuthService.getCurrentUser();
 
     return (
