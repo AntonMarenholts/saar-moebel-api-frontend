@@ -110,23 +110,21 @@ export default function Header() {
       {isAdmin && (
         <div className="bg-gray-700">
           <div className="container mx-auto flex items-center justify-center p-2 gap-4">
-            <Link
-              to="/admin/categories"
-              className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
-            >
+            <Link to="/admin/categories" className="...">
               {t("admin_manage_categories")}
             </Link>
-            <Link
-              to="/admin/add-product"
-              className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
-            >
+            <Link to="/admin/add-product" className="...">
               {t("admin_add_product")}
             </Link>
+            <Link to="/admin/news" className="...">
+              {t("admin_manage_news")}
+            </Link>
+            
             <Link
-              to="/admin/news"
+              to="/admin/promotions"
               className="px-3 py-1 text-sm text-white rounded-md hover:bg-gray-600"
             >
-              {t("admin_manage_news")}
+              {t("admin_manage_promotions")}
             </Link>
           </div>
         </div>

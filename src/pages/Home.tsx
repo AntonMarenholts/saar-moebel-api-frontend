@@ -31,19 +31,19 @@ const LatestNews = () => {
     fetchNews();
   }, [fetchNews]);
 
-  const getTranslated = (article: NewsArticle, field: 'title' | 'content') => {
+  const getTranslated = (article: NewsArticle, field: "title" | "content") => {
     const lang = i18n.language;
-    if (lang === 'en') return article[`${field}En`] || article[`${field}De`];
-    if (lang === 'fr') return article[`${field}Fr`] || article[`${field}De`];
-    if (lang === 'ru') return article[`${field}Ru`] || article[`${field}De`];
-    if (lang === 'uk') return article[`${field}Uk`] || article[`${field}De`];
+    if (lang === "en") return article[`${field}En`] || article[`${field}De`];
+    if (lang === "fr") return article[`${field}Fr`] || article[`${field}De`];
+    if (lang === "ru") return article[`${field}Ru`] || article[`${field}De`];
+    if (lang === "uk") return article[`${field}Uk`] || article[`${field}De`];
     return article[`${field}De`];
   };
 
   if (loading) {
     return <div>{t("loading")}</div>;
   }
-  
+
   if (error) {
     return <div className="text-red-500 text-center">{error}</div>;
   }
@@ -62,13 +62,17 @@ const LatestNews = () => {
             <div className="md:w-1/3 lg:w-1/4 flex-shrink-0 relative overflow-hidden h-64 md:h-auto">
               <img
                 src={article.imageUrl}
-                alt={getTranslated(article, 'title')}
+                alt={getTranslated(article, "title")}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
             </div>
             <div className="p-6 flex flex-col flex-grow">
-              <h3 className="text-xl font-bold mb-2 line-clamp-2">{getTranslated(article, 'title')}</h3>
-              <p className="text-gray-700 mb-4 flex-grow line-clamp-4">{getTranslated(article, 'content')}</p> 
+              <h3 className="text-xl font-bold mb-2 line-clamp-2">
+                {getTranslated(article, "title")}
+              </h3>
+              <p className="text-gray-700 mb-4 flex-grow line-clamp-4">
+                {getTranslated(article, "content")}
+              </p>
             </div>
           </div>
         ))}
@@ -76,29 +80,28 @@ const LatestNews = () => {
 
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-4 mt-8">
-            <button
-                onClick={() => setCurrentPage(prev => prev - 1)}
-                disabled={currentPage === 0}
-                className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
-            >
-                {t('previous_page')}
-            </button>
-            <span className="text-sm font-medium text-gray-700">
-                {t('page')} {currentPage + 1} / {totalPages}
-            </span>
-            <button
-                onClick={() => setCurrentPage(prev => prev + 1)}
-                disabled={currentPage + 1 >= totalPages}
-                className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
-            >
-                {t('next_page')}
-            </button>
+          <button
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={currentPage === 0}
+            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+          >
+            {t("previous_page")}
+          </button>
+          <span className="text-sm font-medium text-gray-700">
+            {t("page")} {currentPage + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={currentPage + 1 >= totalPages}
+            className="px-4 py-2 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300"
+          >
+            {t("next_page")}
+          </button>
         </div>
       )}
     </section>
   );
 };
-
 
 const CategoryGrid = () => {
   const { i18n, t } = useTranslation();
@@ -113,10 +116,10 @@ const CategoryGrid = () => {
   // --- НАЧАЛО ИЗМЕНЕНИЙ ---
   const getCategoryName = (category: Category) => {
     const lang = i18n.language;
-    if (lang === 'en') return category.nameEn || category.nameDe;
-    if (lang === 'fr') return category.nameFr || category.nameDe;
-    if (lang === 'ru') return category.nameRu || category.nameDe;
-    if (lang === 'uk') return category.nameUk || category.nameDe;
+    if (lang === "en") return category.nameEn || category.nameDe;
+    if (lang === "fr") return category.nameFr || category.nameDe;
+    if (lang === "ru") return category.nameRu || category.nameDe;
+    if (lang === "uk") return category.nameUk || category.nameDe;
     return category.nameDe; // По умолчанию всегда немецкий
   };
 
@@ -179,12 +182,31 @@ const CategoryGrid = () => {
   );
 };
 
+const PromotionsBanner = () => {
+  const { t } = useTranslation();
+  return (
+    <Link
+      to="/promotions"
+      className="block group relative rounded-lg overflow-hidden text-white my-12"
+    >
+      <img
+        src="/promo_banner_notext.jpg"
+        alt="Promotions"
+        className="w-full h-48 object-cover transform group-hover:scale-105 transition-transform duration-300"
+      />
+      <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <h2 className="text-3xl font-bold">{t("promotions_banner_title")}</h2>
+      </div>
+    </Link>
+  );
+};
 
 export default function HomePage() {
   return (
     <div className="space-y-12">
       <LatestNews />
       <CategoryGrid />
+      <PromotionsBanner /> {/* <-- ДОБАВЛЕН БАННЕР */}
     </div>
   );
 }
