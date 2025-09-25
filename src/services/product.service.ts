@@ -3,7 +3,7 @@ import AuthService from "./auth.service";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
 
-// Тип для категории
+
 export interface Category {
   id: number;
   nameDe: string;
@@ -15,7 +15,7 @@ export interface Category {
   nameUk?: string;
 }
 
-// Тип для товара
+
 export interface Product {
   id: number;
   name: string;
@@ -25,7 +25,7 @@ export interface Product {
   category: Category;
 }
 
-// Тип для данных нового товара
+
 export interface NewProductData {
   name: string;
   description: string;
@@ -34,7 +34,7 @@ export interface NewProductData {
   categoryId: number;
 }
 
-// Получение списка всех товаров
+
 const getProducts = async (): Promise<Product[]> => {
   const response = await axios.get(API_URL + "/products");
   return response.data;
@@ -45,21 +45,20 @@ const getProductsByCategory = async (slug: string): Promise<Product[]> => {
   return response.data;
 };
 
-// Получение списка всех категорий
+
 const getCategories = async (): Promise<Category[]> => {
   const response = await axios.get(API_URL + "/categories");
   return response.data;
 };
 
 const createCategory = async (
-  nameDe: string, // <-- Изменено для ясности
+  nameDe: string, 
   slug: string
 ): Promise<Category> => {
   const user = AuthService.getCurrentUser();
   const token = user ? user.token : "";
 
-  // --- ИЗМЕНЕНИЕ ЗДЕСЬ ---
-  // Отправляем объект с полем nameDe вместо name
+  
   const response = await axios.post(
     API_URL + "/admin/categories",
     { nameDe, slug }, 

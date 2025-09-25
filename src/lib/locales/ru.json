@@ -149,5 +149,10 @@
   "hours": "часов",
   "minutes": "минут",
   "seconds": "секунд",
-  "back_to_promotions": "Назад к акциям"
+  "back_to_promotions": "Назад к акциям",
+  "cart_title": "Моя корзина",
+  "cart_empty": "Ваша корзина в настоящее время пуста.",
+  "back_to_shopping": "Вернуться к покупкам",
+  "back_to_panel": "Назад в панель"
+  
 }

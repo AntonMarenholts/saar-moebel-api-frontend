@@ -149,5 +149,9 @@
   "hours": "годинник",
   "minutes": "хвилин",
   "seconds": "секунд",
-  "back_to_promotions": "Назад до акцій"
+  "back_to_promotions": "Назад до акцій",
+  "cart_title": "Мій кошик",
+  "cart_empty": "Ваш кошик зараз порожній.",
+  "back_to_shopping": "Повернутись до покупок",
+  "back_to_panel": "Назад до панелі"
 }

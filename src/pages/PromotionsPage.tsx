@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom"; 
 import PromotionService, {
   type Promotion,
 } from "../services/promotion.service";
-import { Link } from "react-router-dom";
 
 
 const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: number, totalPages: number, onPageChange: (page: number) => void }) => {
@@ -28,7 +28,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: nu
         pageNumbers.push(totalPages - 1);
     }
     
-
     return (
          <div className="flex justify-center items-center gap-2 mt-8">
             <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 0} className="px-3 py-1 text-sm font-bold text-white bg-gray-500 rounded-md hover:bg-gray-600 disabled:bg-gray-300">
@@ -50,7 +49,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }: { currentPage: nu
     );
 };
 
-
 const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
   const { i18n, t } = useTranslation();
 
@@ -71,7 +69,7 @@ const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
           return item.nameDe;
       }
     } else {
-      
+      // field === 'description'
       switch (lang) {
         case "en":
           return item.descriptionEn || item.descriptionDe;
@@ -113,6 +111,7 @@ const PromotionCard = ({ promotion }: { promotion: Promotion }) => {
                  {t('promotion_current_price')}: {promotion.price} €
             </p>
         </div>
+
         {promotion.size && (
           <p className="text-xs text-gray-500 mt-1">Size: {promotion.size}</p>
         )}
@@ -147,6 +146,16 @@ export default function PromotionsPage() {
 
   return (
     <div>
+        {/* --- ИЗМЕНЕНИЕ ЗДЕСЬ --- */}
+        <Link 
+            to="/" 
+            className="mb-6 inline-flex items-center gap-2 text-sm text-brand-blue hover:underline"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            {t('back_to_home')}
+        </Link>
       <h1 className="text-3xl font-bold text-gray-800 mb-8">
         {t("promotions_page_title")}
       </h1>
@@ -156,7 +165,9 @@ export default function PromotionsPage() {
         ))}
       </div>
 
-      {totalPages > 1 && <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />}
+      {totalPages > 1 && (
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      )}
     </div>
   );
 }

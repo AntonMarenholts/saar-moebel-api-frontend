@@ -1,10 +1,10 @@
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
-// URL вашего API из переменных окружения
+
 const API_URL = import.meta.env.VITE_API_BASE_URL + "/auth/";
 
-// Интерфейс для данных пользователя, которые мы будем хранить
+
 export interface AuthUser {
   id: number;
   username: string;
@@ -13,9 +13,7 @@ export interface AuthUser {
   token: string;
 }
 
-/**
- * Отправляет запрос на регистрацию нового пользователя.
- */
+
 const register = (username: string, email: string, password: string) => {
   return axios.post(API_URL + "signup", {
     username,
@@ -24,9 +22,7 @@ const register = (username: string, email: string, password: string) => {
   });
 };
 
-/**
- * Отправляет запрос на вход в систему.
- */
+
 const login = async (username: string, password: string): Promise<AuthUser> => {
   const response = await axios.post(API_URL + "signin", {
     username,
@@ -34,7 +30,7 @@ const login = async (username: string, password: string): Promise<AuthUser> => {
   });
 
   if (response.data.token) {
-    // Сохраняем токен и информацию о пользователе в localStorage
+    
     localStorage.setItem("user", JSON.stringify(response.data));
   }
 
@@ -67,19 +63,17 @@ const forgotPassword = (email: string) => {
   return axios.post(API_URL + "forgot-password", { email });
 };
 
-/**
- * Отправляет новый пароль и токен для его смены.
- */
+
 const resetPassword = (token: string, password: string) => {
   return axios.post(API_URL + `reset-password?token=${token}`, { password });
 };
 
 const AuthService = {
-  register, // <-- Добавили новую функцию
+  register, 
   login,
   logout,
   getCurrentUser,
-  forgotPassword, // <-- Добавили
+  forgotPassword, 
   resetPassword,
 };
 

@@ -29,7 +29,7 @@ const getActivePromotions = async (page: number, size: number): Promise<Page<Pro
   return response.data;
 };
 
-// --- НОВАЯ ФУНКЦИЯ ---
+
 const getPromotionById = async (id: number): Promise<Promotion> => {
   const response = await axios.get(`${API_URL}/promotions/${id}`);
   return response.data;
@@ -38,7 +38,7 @@ const getPromotionById = async (id: number): Promise<Promotion> => {
 
 const PromotionService = {
   getActivePromotions,
-  getPromotionById, // --- ЭКСПОРТ НОВОЙ ФУНКЦИИ ---
+  getPromotionById, 
 };
 
 export default PromotionService;

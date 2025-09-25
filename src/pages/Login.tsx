@@ -4,10 +4,10 @@ import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { useTranslation } from "react-i18next";
 
-// URL для старта входа через Google
+
 const GOOGLE_AUTH_URL = import.meta.env.VITE_GOOGLE_LOGIN_URL;
 
-// Тип для данных формы
+
 type Inputs = {
   username: string;
   password: string;
@@ -35,7 +35,7 @@ export default function LoginPage() {
         if (user.roles.includes("ROLE_ADMIN")) {
           navigate("/admin/dashboard");
         } else {
-          navigate("/profile");
+          navigate("/");
         }
         window.location.reload();
       })

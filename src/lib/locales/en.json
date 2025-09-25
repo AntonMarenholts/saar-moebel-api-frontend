@@ -149,5 +149,9 @@
   "hours": "hours",
   "minutes": "minutes",
   "seconds": "seconds",
-  "back_to_promotions": "Back to promotions"
+  "back_to_promotions": "Back to promotions",
+  "cart_title": "My Cart",
+  "cart_empty": "Your cart is currently empty.",
+  "back_to_shopping": "Back to Shopping",
+  "back_to_panel": "Back to Panel"
 }

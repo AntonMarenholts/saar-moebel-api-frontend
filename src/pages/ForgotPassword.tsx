@@ -24,7 +24,7 @@ export default function ForgotPasswordPage() {
         setLoading(false);
       },
       () => {
-        // Показываем то же сообщение даже при ошибке, чтобы не раскрывать email
+        
         setMessage(t('forgot_password_success'));
         setLoading(false);
       }

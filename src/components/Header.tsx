@@ -106,7 +106,7 @@ export default function Header() {
         </div>
       </div>
 
-      {/* --- НОВАЯ ПАНЕЛЬ УПРАВЛЕНИЯ ДЛЯ АДМИНА --- */}
+      
       {isAdmin && (
         <div className="bg-gray-700">
           <div className="container mx-auto flex items-center justify-center p-2 gap-4">

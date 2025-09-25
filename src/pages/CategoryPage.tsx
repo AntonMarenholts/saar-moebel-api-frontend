@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import ProductService, { type Product } from "../services/product.service";
 import { useTranslation } from "react-i18next";
 
-// Этот компонент вынесен для чистоты и ИСПОЛЬЗУЕТ `t` для кнопки
+
 const ProductCard = ({ product }: { product: Product }) => {
   const { t } = useTranslation();
   return (
@@ -53,12 +53,12 @@ const ProductCard = ({ product }: { product: Product }) => {
   );
 };
 
-// Основной компонент страницы. Здесь 't' тоже НУЖЕН для заголовка и сообщений.
+
 const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { t } = useTranslation(); // Эта переменная 't' теперь будет использоваться
+  const { t } = useTranslation(); 
 
   useEffect(() => {
     if (slug) {
@@ -74,13 +74,13 @@ const CategoryPage = () => {
   }, [slug]);
 
   if (loading) {
-    return <div className="text-center p-8">{t("loading")}</div>; // Используется здесь
+    return <div className="text-center p-8">{t("loading")}</div>; 
   }
 
   return (
     <div>
       <h1 className="text-3xl font-bold capitalize mb-8">
-        {/* Используется здесь */}
+        
         {t(slug || "", { defaultValue: slug?.replace(/_/g, " ") })}
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
@@ -89,7 +89,7 @@ const CategoryPage = () => {
             <ProductCard key={product.id} product={product} />
           ))
         ) : (
-          // Используется здесь
+          
           <p>{t("no_products_in_category")}</p>
         )}
       </div>

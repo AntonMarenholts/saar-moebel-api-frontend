@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../services/auth.service";
 import { useTranslation } from "react-i18next";
 
-// Тип для данных формы
+
 type Inputs = {
   username: string;
   email: string;
@@ -17,7 +17,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // <-- Добавлено
+  const [showPassword, setShowPassword] = useState(false); 
 
   const {
     register,
