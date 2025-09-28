@@ -187,5 +187,11 @@
   "total_price": "Загальна ціна",
   "configure_your_set": "Налаштуйте свій набір",
   "back_to_all_categories": "Назад до всіх категорій",
-  "confirm delete_collection": "Ви впевнені, що хочете видалити колекцію?"
+  "confirm delete_collection": "Ви впевнені, що хочете видалити колекцію?",
+  "collection_update_success": "Колекцію успішно оновлено!",
+  "collection_update_error": "Помилка оновлення колекції",
+  "editing_collection_title": "Редагування колекції",
+  "back_to_collections_list": "← Назад до колекцій",
+  "save_changes": "Зберегти зміни",
+  "price_per_item": "за елемент"
 }

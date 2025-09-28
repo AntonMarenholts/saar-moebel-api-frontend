@@ -15,6 +15,14 @@ export interface Category {
   nameUk?: string;
 }
 
+export interface UpdateCollectionData {
+    slug: string;
+    nameDe: string;
+    descriptionDe: string;
+    imageUrl?: string; // Необязательное поле
+    categoryId: number;
+}
+
 export interface Product {
   id: number;
   nameDe: string;
@@ -65,6 +73,11 @@ export interface NewElementData {
     imageUrl: string;
     collectionId: number;
 }
+
+const updateCollection = async (id: number, data: UpdateCollectionData): Promise<ProductCollection> => {
+    const response = await axios.put(`${API_URL}/admin/collections/${id}`, data, { headers: getAuthHeaders() });
+    return response.data;
+};
 
 const getAuthHeaders = () => {
   const user = AuthService.getCurrentUser();
@@ -141,6 +154,7 @@ const ProductService = {
   createCollection,
   addElementToCollection,
   deleteCollection,
+  updateCollection,
   uploadImage,
 };
 

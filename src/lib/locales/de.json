@@ -187,5 +187,11 @@
   "total_price": "Gesamtpreis",
   "configure_your_set": "Stellen Sie Ihr Set zusammen",
   "back_to_all_categories": "Zurück zu allen Kategorien",
-  "confirm delete_collection": "Möchten Sie die Sammlung wirklich löschen?"
+  "confirm delete_collection": "Möchten Sie die Sammlung wirklich löschen?",
+  "collection_update_success": "Kollektion erfolgreich aktualisiert!",
+  "collection_update_error": "Fehler beim Aktualisieren der Kollektion",
+  "editing_collection_title": "Kollektion bearbeiten",
+  "back_to_collections_list": "← Zurück zu den Kollektionen",
+  "save_changes": "Änderungen speichern",
+  "price_per_item": "pro Element"
 }

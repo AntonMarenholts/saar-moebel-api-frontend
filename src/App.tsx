@@ -21,6 +21,7 @@ import CollectionPage from "./pages/CollectionPage";
 import UserRoute from "./components/auth/UserRoute"; 
 import AddCollectionPage from "./pages/admin/AddCollectionPage";
 import AddElementPage from "./pages/admin/AddElementPage"; 
+import EditCollectionPage from "./pages/admin/EditCollectionPage";
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           <Route path="/admin/categories" element={<ManageCategoriesPage />} />
           <Route path="/admin/news" element={<ManageNewsPage />} />
           <Route path="/admin/promotions" element={<ManagePromotionsPage />} />
+          <Route path="/admin/collection/:id/edit" element={<EditCollectionPage />} />
           <Route path="/admin/collection/:collectionId/add-element" element={<AddElementPage />} />
         </Route>
 

@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import ProductService, { type ProductCollection } from "../services/product.service";
 import AuthService from "../services/auth.service"; 
 import { useTranslation } from "react-i18next";
-
 
 const getTranslated = (
     item: ProductCollection, 
@@ -22,6 +21,7 @@ const CollectionCard = ({ collection, onDelete }: { collection: ProductCollectio
     const { t, i18n } = useTranslation();
     const currentUser = AuthService.getCurrentUser();
     const isAdmin = currentUser?.roles.includes('ROLE_ADMIN');
+    const navigate = useNavigate();
 
     const collectionName = getTranslated(collection, 'name', i18n.language);
     const collectionDescription = getTranslated(collection, 'description', i18n.language);
@@ -48,7 +48,10 @@ const CollectionCard = ({ collection, onDelete }: { collection: ProductCollectio
             
             {isAdmin && (
                 <div className="absolute top-2 right-2 flex gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity z-10">
-                    <button onClick={(e) => { e.preventDefault(); alert('Функция редактирования в разработке'); }} className="p-2 bg-yellow-500 text-white rounded-full shadow-lg hover:bg-yellow-600">
+                    <button 
+                        onClick={(e) => { e.preventDefault(); navigate(`/admin/collection/${collection.id}/edit`); }} 
+                        className="p-2 bg-yellow-500 text-white rounded-full shadow-lg hover:bg-yellow-600"
+                    >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.536L16.732 3.732z" /></svg>
                     </button>
                     <button onClick={handleDelete} className="p-2 bg-red-600 text-white rounded-full shadow-lg hover:bg-red-700">
@@ -63,9 +66,11 @@ const CollectionCard = ({ collection, onDelete }: { collection: ProductCollectio
                 <p className="text-sm text-gray-600 mt-1 line-clamp-2 h-10">{collectionDescription}</p>
                 <div className="mt-4 flex justify-between items-center">
                     {startingPrice > 0 && (
-                        <p className="text-lg font-semibold text-gray-700">
-                            {t('price_from')} <span className="text-2xl font-bold text-brand-blue">{startingPrice.toFixed(2)} €</span>
-                        </p>
+                        <div className="text-lg font-semibold text-gray-700">
+                            {t('price_from')} 
+                            <span className="text-2xl font-bold text-brand-blue ml-1">{startingPrice.toFixed(2)} €</span>
+                            <span className="text-sm text-gray-500"> /{t('price_per_item')}</span>
+                        </div>
                     )}
                     <span className="px-4 py-2 text-sm font-bold text-white bg-brand-blue rounded-full group-hover:bg-blue-700 transition-colors">
                         {t('view_collection')}

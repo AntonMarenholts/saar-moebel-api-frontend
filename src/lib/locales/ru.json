@@ -187,5 +187,11 @@
   "total_price": "Итоговая цена",
   "configure_your_set": "Сконфигурируйте свой набор",
   "back_to_all_categories": "Вернуться ко всем категориям",
-  "confirm delete_collection": "Вы уверены, что хотите удалить коллекцию?"
+  "confirm delete_collection": "Вы уверены, что хотите удалить коллекцию?",
+  "collection_update_success": "Коллекция успешно обновлена!",
+  "collection_update_error": "Ошибка обновления коллекции",
+  "editing_collection_title": "Редактирование коллекции",
+  "back_to_collections_list": "← Назад к коллекциям",
+  "save_changes": "Сохранить изменения",
+  "price_per_item": "за элемент"
 }

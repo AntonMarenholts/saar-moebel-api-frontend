@@ -187,5 +187,11 @@
   "total_price": "Total Price",
   "configure_your_set": "Configure Your Set",
   "back_to_all_categories": "Back to all categories",
-  "confirm_delete_collection": "Are you sure you want to delete the collection"
+  "confirm_delete_collection": "Are you sure you want to delete the collection",
+  "collection_update_success": "Collection updated successfully!",
+  "collection_update_error": "Error updating collection",
+  "editing_collection_title": "Edit Collection",
+  "back_to_collections_list": "← Back to Collections",
+  "save_changes": "Save Changes",
+  "price_per_item": "per item"
 }
