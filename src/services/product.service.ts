@@ -15,34 +15,60 @@ export interface Category {
   nameUk?: string;
 }
 
-
 export interface Product {
   id: number;
-  name: string;
-  description: string;
+  nameDe: string;
+  nameEn?: string;
+  nameFr?: string;
+  nameRu?: string;
+  nameUk?: string;
+  descriptionDe: string;
+  descriptionEn?: string;
+  descriptionFr?: string;
+  descriptionRu?: string;
+  descriptionUk?: string;
   price: number;
+  imageUrl: string;
+}
+
+export interface ProductCollection {
+  id: number;
+  slug: string;
+  nameDe: string;
+  nameEn?: string;
+  nameFr?: string;
+  nameRu?: string;
+  nameUk?: string;
+  descriptionDe: string;
+  descriptionEn?: string;
+  descriptionFr?: string;
+  descriptionRu?: string;
+  descriptionUk?: string;
   imageUrl: string;
   category: Category;
+  products: Product[]; 
+}
+
+export interface NewCollectionData {
+    slug: string;
+    nameDe: string;
+    descriptionDe: string;
+    imageUrl: string;
+    categoryId: number;
 }
 
 
-export interface NewProductData {
-  name: string;
-  description: string;
-  price: number;
-  imageUrl: string;
-  categoryId: number;
+export interface NewElementData {
+    nameDe: string;
+    descriptionDe: string;
+    price: number;
+    imageUrl: string;
+    collectionId: number;
 }
 
-
-const getProducts = async (): Promise<Product[]> => {
-  const response = await axios.get(API_URL + "/products");
-  return response.data;
-};
-
-const getProductsByCategory = async (slug: string): Promise<Product[]> => {
-  const response = await axios.get(`${API_URL}/products/category/${slug}`);
-  return response.data;
+const getAuthHeaders = () => {
+  const user = AuthService.getCurrentUser();
+  return user ? { Authorization: `Bearer ${user.token}` } : {};
 };
 
 
@@ -51,104 +77,70 @@ const getCategories = async (): Promise<Category[]> => {
   return response.data;
 };
 
-const createCategory = async (
-  nameDe: string, 
-  slug: string
-): Promise<Category> => {
-  const user = AuthService.getCurrentUser();
-  const token = user ? user.token : "";
-
-  
-  const response = await axios.post(
-    API_URL + "/admin/categories",
-    { nameDe, slug }, 
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+const getCollectionsByCategory = async (slug: string): Promise<ProductCollection[]> => {
+  const response = await axios.get(`${API_URL}/collections/category/${slug}`);
   return response.data;
 };
-const deleteCategory = async (id: number) => {
-  const user = AuthService.getCurrentUser();
-  const token = user ? user.token : "";
 
-  await axios.delete(`${API_URL}/admin/categories/${id}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+const getCollectionById = async (id: number): Promise<ProductCollection> => {
+    const response = await axios.get(`${API_URL}/collections/${id}`);
+    return response.data;
 };
 
-const updateCategoryImage = async (
-  id: number,
-  imageUrl: string
-): Promise<Category> => {
-  const user = AuthService.getCurrentUser();
-  const token = user ? user.token : "";
+const getCollectionBySlug = async (slug: string): Promise<ProductCollection> => {
+    const response = await axios.get(`${API_URL}/collections/slug/${slug}`);
+    return response.data;
+};
 
-  const response = await axios.put(
-    `${API_URL}/admin/categories/${id}/image`,
-    { imageUrl },
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
-  return response.data;
+const getProductById = async (id: number): Promise<Product> => {
+    const response = await axios.get(`${API_URL}/products/${id}`);
+    return response.data;
+}
+
+
+
+const getAllCollections = async (): Promise<ProductCollection[]> => {
+    const response = await axios.get(`${API_URL}/admin/collections`, { headers: getAuthHeaders() });
+    return response.data;
+};
+
+const createCollection = async (data: NewCollectionData): Promise<ProductCollection> => {
+    const response = await axios.post(`${API_URL}/admin/collections`, data, { headers: getAuthHeaders() });
+    return response.data;
+};
+
+const addElementToCollection = async (data: NewElementData): Promise<Product> => {
+    const response = await axios.post(`${API_URL}/admin/collections/elements`, data, { headers: getAuthHeaders() });
+    return response.data;
+};
+
+const deleteCollection = async (id: number): Promise<void> => {
+    await axios.delete(`${API_URL}/admin/collections/${id}`, { headers: getAuthHeaders() });
 };
 
 const uploadImage = async (file: File): Promise<{ imageUrl: string }> => {
   const formData = new FormData();
   formData.append("file", file);
-
-  const user = AuthService.getCurrentUser();
-  const token = user ? user.token : "";
-
   const response = await axios.post(API_URL + "/upload/image", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${token}`,
+      ...getAuthHeaders(),
     },
   });
-  return response.data;
-};
-
-const createProduct = async (productData: NewProductData) => {
-  const user = AuthService.getCurrentUser();
-  const token = user ? user.token : "";
-
-  const response = await axios.post(API_URL + "/products", productData, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
-};
-
-export interface PaginatedResponse<T> {
-  content: T[];
-  totalPages: number;
-  totalElements: number;
-  number: number;
-  size: number;
-}
-
-const getLatestProducts = async (
-  page: number,
-  size: number
-): Promise<PaginatedResponse<Product>> => {
-  const response = await axios.get(
-    `${API_URL}/products/latest?page=${page}&size=${size}`
-  );
   return response.data;
 };
 
 const ProductService = {
-  getProducts,
-  getProductsByCategory,
+  
   getCategories,
-  getLatestProducts,
-  createProduct,
-  createCategory,
-  deleteCategory,
-  updateCategoryImage,
+  getCollectionsByCategory,
+  getCollectionById,
+  getProductById,
+  getCollectionBySlug,
+  getAllCollections,
+  createCollection,
+  addElementToCollection,
+  deleteCollection,
   uploadImage,
 };
 

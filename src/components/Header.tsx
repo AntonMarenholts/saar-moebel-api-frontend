@@ -113,8 +113,8 @@ export default function Header() {
             <Link to="/admin/categories" className="...">
               {t("admin_manage_categories")}
             </Link>
-            <Link to="/admin/add-product" className="...">
-              {t("admin_add_product")}
+            <Link to="/admin/add-collection" className="...">
+              {t("admin_add_collection")}
             </Link>
             <Link to="/admin/news" className="...">
               {t("admin_manage_news")}
