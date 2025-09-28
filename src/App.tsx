@@ -9,7 +9,6 @@ import NotFoundPage from "./pages/NotFound";
 import OAuth2RedirectHandler from "./pages/OAuth2RedirectHandler";
 import ForgotPasswordPage from "./pages/ForgotPassword";
 import ResetPasswordPage from "./pages/ResetPassword";
-import AddProductPage from "./pages/AddProduct";
 import AdminRoute from "./components/auth/AdminRoute";
 import ManageCategoriesPage from "./pages/ManageCategories";
 import ManageNewsPage from "./pages/ManageNews";
@@ -18,7 +17,11 @@ import PromotionsPage from "./pages/PromotionsPage";
 import ManagePromotionsPage from "./pages/ManagePromotions";
 import PromotionDetailPage from "./pages/PromotionDetailPage";
 import CartPage from "./pages/CartPage"; 
+import CollectionPage from "./pages/CollectionPage";
 import UserRoute from "./components/auth/UserRoute"; 
+import AddCollectionPage from "./pages/admin/AddCollectionPage";
+import AddElementPage from "./pages/admin/AddElementPage"; 
+import EditCollectionPage from "./pages/admin/EditCollectionPage";
 
 function App() {
   return (
@@ -35,6 +38,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/category/:slug" element={<CategoryPage />} />
+        <Route path="/collection/:slug" element={<CollectionPage />} />
 
         
         <Route element={<UserRoute />}>
@@ -45,10 +49,12 @@ function App() {
         
         <Route element={<AdminRoute />}>
           <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route path="/admin/add-product" element={<AddProductPage />} />
+          <Route path="/admin/add-collection" element={<AddCollectionPage />} />
           <Route path="/admin/categories" element={<ManageCategoriesPage />} />
           <Route path="/admin/news" element={<ManageNewsPage />} />
           <Route path="/admin/promotions" element={<ManagePromotionsPage />} />
+          <Route path="/admin/collection/:id/edit" element={<EditCollectionPage />} />
+          <Route path="/admin/collection/:collectionId/add-element" element={<AddElementPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />
